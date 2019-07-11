@@ -1,0 +1,49 @@
+{
+  "title": "Tweeter Server",
+  "private": true,
+  "webpackConfigJaid": "executable",
+  "version": "0.1.0",
+  "author": "Jaid <jaid.jsx@gmail.com> (https://github.com/Jaid)",
+  "dependencies": {
+    "@absolunet/fsp": "^1.6.1",
+    "@babel/runtime": "^7.5.4",
+    "body-parser": "^1.19.0",
+    "ensure-array": "^1.0.0",
+    "essential-config": "^3.0.1",
+    "express": "^4.17.1",
+    "flatted": "^2.0.1",
+    "globby": "^10.0.1",
+    "got": "^9.6.0",
+    "handlebars": "^4.1.2",
+    "jaid-logger": "^1.4.0",
+    "lodash": "^4.17.14",
+    "oauth-1.0a": "^2.2.6",
+    "query-string": "^6.8.1"
+  },
+  "devDependencies": {
+    "acorn": "^6.2.0",
+    "babel-jest": "^24.8.0",
+    "babel-preset-jaid": "^6.8.2",
+    "browserslist-config-jaid-node": "^2.2.1",
+    "delay": "^4.3.0",
+    "eslint": "^6.0.1",
+    "eslint-config-jaid": "^1.19.0",
+    "jest": "^24.8.0",
+    "rimraf": "^2.6.3",
+    "webpack": "^4.35.3",
+    "webpack-config-jaid": "^5.22.0"
+  },
+  "scripts": {
+    "clean": "rimraf dist/",
+    "start": "npm run build:dev && node --inspect=9229 dist/package/development/app.js",
+    "babel:prod": "rimraf dist/transpiled/production && NODE_ENV=production babel --out-dir dist/transpiled/production --source-maps true src",
+    "babel:dev": "rimraf dist/transpiled/development && NODE_ENV=development babel --out-dir dist/transpiled/development src",
+    "babel:test": "rimraf dist/transpiled/test && NODE_ENV=test babel --out-dir dist/transpiled/test src",
+    "build:prod": "NODE_ENV=production webpack",
+    "build:dev": "NODE_ENV=development webpack",
+    "test": "npm run build:prod && NODE_ENV=production MAIN=$(npx find-by-extension-cli js --fullPath --cwd dist/package/production) jest --runInBand",
+    "test:coverage": "npm run test:dev -- --coverage --json --outputFile=dist/jest/stats.json",
+    "test:dev": "npm run build:dev && NODE_ENV=test MAIN=$(npx find-by-extension-cli js --fullPath --cwd dist/package/development) jest --runInBand",
+    "test:debug": "npm run start"
+  }
+}
