@@ -1,3 +1,7 @@
 apiHost: localhost
 apiProtocol: http
 apiPort: 18888
+steamGameUpdates:
+  - title: Dead by Daylight
+    depotId: 381211
+    handle: patchbydaylight
