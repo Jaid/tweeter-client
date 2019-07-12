@@ -6,9 +6,8 @@ import defaults from "./defaults.yml"
 const config = essentialConfig(_PKG_TITLE, {
   defaults,
   sensitiveKeys: [
-    "twitterConsumerKey",
-    "twitterConsumerSecret",
     "apiUser",
+    "apiKey",
   ],
 })
 

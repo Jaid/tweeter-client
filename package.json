@@ -7,18 +7,9 @@
   "dependencies": {
     "@absolunet/fsp": "^1.6.1",
     "@babel/runtime": "^7.5.4",
-    "body-parser": "^1.19.0",
-    "ensure-array": "^1.0.0",
     "essential-config": "^3.0.1",
-    "express": "^4.17.1",
-    "flatted": "^2.0.1",
-    "globby": "^10.0.1",
     "got": "^9.6.0",
-    "handlebars": "^4.1.2",
-    "jaid-logger": "^1.4.0",
-    "lodash": "^4.17.14",
-    "oauth-1.0a": "^2.2.6",
-    "query-string": "^6.8.1"
+    "lodash": "^4.17.14"
   },
   "devDependencies": {
     "acorn": "^6.2.0",

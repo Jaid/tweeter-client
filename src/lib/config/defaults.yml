@@ -1,4 +1,3 @@
-protocol: https
-host: localhost
+apiHost: localhost
+apiProtocol: http
 apiPort: 18888
-apiSslPort: 18889
