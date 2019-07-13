@@ -10,6 +10,9 @@ export default class Tweeter {
     method: "POST",
     baseUrl: `${config.apiProtocol}://${config.apiHost}`,
     port: config.apiPort,
+    headers: {
+      "Content-type": "application/json",
+    },
   })
 
   /**
@@ -31,12 +34,12 @@ export default class Tweeter {
     logger.info("[Tweeter #%s] @%s: %s", this.index, this.handle, text)
     try {
       const result = await Tweeter.apiGot.post("tweet", {
-        body: {
+        body: JSON.stringify({
           text,
           handle: this.handle,
           apiUser: config.apiUser,
           apiKey: config.apiKey,
-        } |> JSON.stringify,
+        }),
       })
       logger.debug("Tweet result: [%s %s] %s", result.statusCode, result.statusMessage, result.body)
     } catch (error) {
