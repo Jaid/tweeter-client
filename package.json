@@ -7,7 +7,6 @@
   "dependencies": {
     "@absolunet/fsp": "^1.6.1",
     "@babel/runtime": "^7.5.4",
-    "canvas": "^2.5.0",
     "ensure-array": "^1.0.0",
     "essential-config": "^3.0.1",
     "got": "^9.6.0",
