@@ -5,3 +5,4 @@ steamGameUpdates:
   - title: Dead by Daylight
     depotId: 381211
     handle: patchbydaylight
+startupHandle: false
