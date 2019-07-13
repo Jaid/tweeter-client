@@ -26,7 +26,7 @@ export default class Tweeter {
   async post(text) {
     logger.info("[Tweeter #%s] @%s: %s", this.index, this.handle, text)
     try {
-      await Tweeter.apiGot.post("tweet", {
+      const result = await Tweeter.apiGot.post("tweet", {
         body: {
           text,
           handle: this.handle,
@@ -34,6 +34,7 @@ export default class Tweeter {
           apiKey: config.apiKey,
         } |> JSON.stringify,
       })
+      logger.debug("Tweet result: [%s %s] %s", result.statusCode, result.statusMessage, result.body)
     } catch (error) {
       logger.error("[Tweeter #%s] Could not send tweet: %s", this.index, error)
     }
