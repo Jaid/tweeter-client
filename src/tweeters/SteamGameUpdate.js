@@ -13,11 +13,12 @@ import Tweeter from "./Tweeter"
 
 export default class extends Tweeter {
 
+  /**
+   * @constructor
+   * @param {Info} info
+   */
   constructor(info) {
     super(info.handle)
-    /**
-     * @type {Info}
-     */
     this.watcher = new SteamGameUpdateWatcher({
       depotId: info.depotId,
     })

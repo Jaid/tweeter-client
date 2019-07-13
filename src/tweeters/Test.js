@@ -2,6 +2,10 @@ import Tweeter from "./Tweeter"
 
 export default class extends Tweeter {
 
+  /**
+   * @constructor
+   * @param {string} handle
+   */
   constructor(handle) {
     super(handle)
     /**

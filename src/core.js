@@ -1,7 +1,7 @@
 import EventEmitter from "events"
 
 import "lib/startDate"
-import config from "lib/config"
+import config, {appFolder} from "lib/config"
 import ensureArray from "ensure-array"
 import SteamGameUpdate from "src/tweeters/SteamGameUpdate"
 import Test from "src/tweeters/Test"

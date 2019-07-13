@@ -12,6 +12,10 @@ export default class Tweeter {
     port: config.apiPort,
   })
 
+  /**
+   * @constructor
+   * @param {string} handle
+   */
   constructor(handle) {
     this.handle = handle
     this.index = currentIndex

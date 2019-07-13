@@ -3,7 +3,7 @@ import logger from "lib/logger"
 
 import defaults from "./defaults.yml"
 
-const config = essentialConfig(_PKG_TITLE, {
+const configResult = essentialConfig(_PKG_TITLE, {
   defaults,
   sensitiveKeys: [
     "apiUser",
@@ -11,10 +11,30 @@ const config = essentialConfig(_PKG_TITLE, {
   ],
 })
 
+/**
+ * @typedef {Object} Config
+ * @prop {string} apiUser
+ * @prop {string} apiKey
+ * @prop {string} apiHost
+ * @prop {string} apiProtocol
+ * @prop {number} apiPort
+ * @prop {{title: string, depotId: string, handle: string}[]} steamGameUpdates
+ * @prop {boolean|string} startupHandle
+ */
+
+/**
+ * @type {Config}
+ */
+const config = configResult.config
+
 if (!config) {
   logger.warn("Set up default config, please edit and restart")
   process.exit(2)
 }
 
-export const appFolder = config.appFolder
-export default config.config
+/**
+ * @type {string}
+ */
+export const appFolder = configResult.appFolder
+
+export default config
