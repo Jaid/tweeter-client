@@ -6,8 +6,7 @@ export default class Tweeter {
 
   static apiGot = got.extend({
     method: "POST",
-    protocol: config.apiProtocol,
-    baseUrl: config.apiHost,
+    baseUrl: `${config.apiProtocol}://${config.apiHost}`,
     port: config.apiPort,
   })
 
