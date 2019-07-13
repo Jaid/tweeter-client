@@ -29,13 +29,15 @@ export default class Tweeter {
   /**
    * @async
    * @param {string} text
+   * @param {*} [media]
    */
-  async post(text) {
+  async post(text, media) {
     logger.info("[Tweeter #%s] @%s: %s", this.index, this.handle, text)
     try {
       const result = await Tweeter.apiGot.post("tweet", {
         body: JSON.stringify({
           text,
+          media,
           handle: this.handle,
           apiUser: config.apiUser,
           apiKey: config.apiKey,

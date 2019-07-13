@@ -7,6 +7,7 @@
   "dependencies": {
     "@absolunet/fsp": "^1.6.1",
     "@babel/runtime": "^7.5.4",
+    "canvas": "^2.5.0",
     "ensure-array": "^1.0.0",
     "essential-config": "^3.0.1",
     "got": "^9.6.0",
@@ -19,10 +20,12 @@
     "babel-jest": "^24.8.0",
     "babel-preset-jaid": "^6.8.2",
     "browserslist-config-jaid-node": "^2.2.1",
+    "copy-webpack-plugin": "^5.0.3",
     "delay": "^4.3.0",
     "eslint": "^6.0.1",
     "eslint-config-jaid": "^1.19.0",
     "jest": "^24.8.0",
+    "native-ext-loader": "^2.3.0",
     "rimraf": "^2.6.3",
     "webpack": "^4.35.3",
     "webpack-config-jaid": "^5.22.0"
