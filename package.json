@@ -7,9 +7,12 @@
   "dependencies": {
     "@absolunet/fsp": "^1.6.1",
     "@babel/runtime": "^7.5.4",
+    "ensure-array": "^1.0.0",
     "essential-config": "^3.0.1",
     "got": "^9.6.0",
-    "lodash": "^4.17.14"
+    "jaid-logger": "^1.4.0",
+    "lodash": "^4.17.14",
+    "steam-game-update-watcher": "^1.1.0"
   },
   "devDependencies": {
     "acorn": "^6.2.0",
