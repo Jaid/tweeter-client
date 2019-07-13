@@ -1,5 +1,5 @@
 {
-  "title": "Tweeter Server",
+  "title": "Tweeter Client",
   "private": true,
   "webpackConfigJaid": "executable",
   "version": "1.0.0",
