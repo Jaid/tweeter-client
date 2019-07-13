@@ -23,6 +23,10 @@ export default class Tweeter {
     logger.info("Registered tweeter #%s for @%s", this.index, handle)
   }
 
+  /**
+   * @async
+   * @param {string} text
+   */
   async post(text) {
     logger.info("[Tweeter #%s] @%s: %s", this.index, this.handle, text)
     try {
