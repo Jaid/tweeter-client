@@ -7,9 +7,12 @@ import Tweeter from "./Tweeter"
 const renderImage = async () => {
   const canvas = createCanvas(1920, 1080)
   const context = canvas.getContext("2d")
-  const backgroundBuffer = await fsp.readFile("dist/background.png")
-  const backgroundImage = await loadImage(backgroundBuffer)
-  context.drawImage(backgroundImage, 0, 0)
+
+  try {
+    const backgroundBuffer = await fsp.readFile("background.png")
+    const backgroundImage = await loadImage(backgroundBuffer)
+    context.drawImage(backgroundImage, 0, 0)
+  } catch {}
 
   context.fillStyle = "#CCC"
   context.textAlign = "center"
