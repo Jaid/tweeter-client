@@ -29,7 +29,7 @@ export default class Tweeter {
   /**
    * @async
    * @param {string} text
-   * @param {*} [media]
+   * @param {string[]} [media]
    */
   async post(text, media) {
     logger.info("[Tweeter #%s] @%s: %s", this.index, this.handle, text)

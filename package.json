@@ -7,11 +7,13 @@
   "dependencies": {
     "@absolunet/fsp": "^1.6.1",
     "@babel/runtime": "^7.5.4",
+    "canvas": "^2.5.0",
     "ensure-array": "^1.0.0",
     "essential-config": "^3.0.1",
     "got": "^9.6.0",
     "jaid-logger": "^1.4.0",
     "lodash": "^4.17.14",
+    "moment": "^2.24.0",
     "steam-game-update-watcher": "^1.1.0"
   },
   "devDependencies": {
@@ -29,7 +31,7 @@
   },
   "scripts": {
     "clean": "rimraf dist/",
-    "start": "npm run build:dev && node --inspect=9229 dist/package/development/app.js",
+    "start": "npm run build:dev && node --inspect=9229 $(npx find-by-extension-cli js --fullPath --cwd dist/package/development)",
     "babel:prod": "rimraf dist/transpiled/production && NODE_ENV=production babel --out-dir dist/transpiled/production --source-maps true src",
     "babel:dev": "rimraf dist/transpiled/development && NODE_ENV=development babel --out-dir dist/transpiled/development src",
     "babel:test": "rimraf dist/transpiled/test && NODE_ENV=test babel --out-dir dist/transpiled/test src",
