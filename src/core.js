@@ -10,7 +10,7 @@ class Core extends EventEmitter {
 
   async init() {
     /**
-     * @type { Tweeter[]}
+     * @type {Tweeter[]}
      */
     const tweeters = []
     for (const info of ensureArray(config.steamGameUpdates)) {
