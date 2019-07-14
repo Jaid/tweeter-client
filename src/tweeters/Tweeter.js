@@ -29,11 +29,12 @@ export default class Tweeter {
   /**
    * @async
    * @param {string} text
-   * @param {string[]} [media]
+   * @param {string|string[]} [media]
    */
   async post(text, media) {
-    logger.info("[Tweeter #%s] @%s: %s", this.index, this.handle, text)
     try {
+      debugger
+      logger.info("[Tweeter #%s] @%s: %s", this.index, this.handle, text)
       const result = await Tweeter.apiGot.post("tweet", {
         body: JSON.stringify({
           text,
@@ -47,6 +48,10 @@ export default class Tweeter {
     } catch (error) {
       logger.error("[Tweeter #%s] Could not send tweet: %s", this.index, error)
     }
+  }
+
+  async postMedia(media) {
+    await this.post("", media)
   }
 
 }

@@ -35,6 +35,6 @@ if (!config) {
 /**
  * @type {string}
  */
-export const appFolder = configResult.appFolder
+export const appFolder = config.configFolder
 
 export default config
