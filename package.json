@@ -2,7 +2,7 @@
   "title": "Tweeter Client",
   "private": true,
   "webpackConfigJaid": "cli",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "author": "Jaid <jaid.jsx@gmail.com> (https://github.com/Jaid)",
   "dependencies": {
     "@absolunet/fsp": "^1.6.1",
