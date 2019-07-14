@@ -45,6 +45,7 @@ export default class extends Tweeter {
   }
 
   async run() {
+    const dataUrl = await renderImage()
     this.post(`${_PKG_TITLE} v${_PKG_VERSION}, ${Date.now()}`, [dataUrl])
   }
 
