@@ -11,7 +11,7 @@
     "ensure-array": "^1.0.0",
     "essential-config": "^3.0.1",
     "got": "^9.6.0",
-    "jaid-logger": "^1.4.0",
+    "jaid-logger": "^1.4.1",
     "jimp": "^0.6.4",
     "lodash": "^4.17.14",
     "moment": "^2.24.0",
