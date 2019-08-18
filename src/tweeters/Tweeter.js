@@ -1,6 +1,4 @@
-import config from "lib/config"
-import got from "got"
-import logger from "lib/logger"
+import {got, logger, config} from "src/core"
 
 let currentIndex = 1
 

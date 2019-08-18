@@ -1,5 +1,5 @@
 import SteamGameUpdateWatcher from "steam-game-update-watcher"
-import logger from "lib/logger"
+import {logger} from "src/core"
 import fsp from "@absolunet/fsp"
 import {createCanvas, loadImage, registerFont} from "canvas"
 import moment from "moment"

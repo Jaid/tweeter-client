@@ -1,27 +1,51 @@
-import EventEmitter from "events"
+import JaidCore from "jaid-core"
 
-import "lib/startDate"
-import config from "lib/config"
-import ensureArray from "ensure-array"
-import SteamGameUpdate from "src/tweeters/SteamGameUpdate"
-import Test from "src/tweeters/Test"
+import defaults from "./defaults.yml"
 
-class Core extends EventEmitter {
+const core = new JaidCore({
+  name: _PKG_TITLE,
+  version: _PKG_VERSION,
+  gotLogLevel: "info",
+  useGot: true,
+  configSetup: {
+    defaults,
+    secretKeys: ["apiKey"],
+  },
+})
 
-  async init() {
-    /**
-     * @type {Tweeter[]}
-     */
-    const tweeters = []
-    for (const info of ensureArray(config.steamGameUpdates)) {
-      const tweeter = new SteamGameUpdate(info)
-      tweeters.push(tweeter)
-    }
-    if (config.startupHandle) {
-      tweeters.push(new Test(config.startupHandle))
-    }
-  }
+/**
+ * @typedef {Object} SteamGameUpdate
+ * @prop {string} title
+ * @prop {number} depotId
+ * @prop {string} handle
+ * @prop {string} backgroundFile
+ * @prop {number} randomHue
+ */
 
-}
+/**
+ * @typedef {Object} Config
+ * @prop {string} apiUser
+ * @prop {string} apiKey
+ * @prop {string} apiHost
+ * @prop {string} apiProtocol
+ * @prop {string} apiPort
+ * @prop {string} startupHandle
+ * @prop {SteamGameUpdate[]} steamGameUpdates
+ */
 
-export default new Core
+/**
+ * @type {import("jaid-logger").JaidLogger}
+ */
+export const logger = core.logger
+
+/**
+ * @type {import("got").GotInstance}
+ */
+export const got = core.got
+
+/**
+ * @type {import("jaid-core").BaseConfig & Config}
+ */
+export const config = core.config
+
+export default core

@@ -1,10 +1,11 @@
 apiHost: localhost
 apiProtocol: http
-apiPort: 18888
+apiPort: 80
 steamGameUpdates:
   - title: Dead by Daylight
     depotId: 381211
     handle: patchbydaylight
     backgroundFile: backgrounds/dbd.png
     randomHue: 20
-startupHandle: false
+startupHandle: dotapatch
+apiUser: jaid
