@@ -10,24 +10,24 @@
     "canvas": "^2.6.0",
     "ensure-array": "^1.0.0",
     "got": "^9.6.0",
-    "jaid-core": "^4.3.1",
+    "jaid-core": "^4.5.1",
     "jimp": "^0.6.4",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
-    "steam-game-update-watcher": "^1.1.0"
+    "steam-game-update-watcher": "^1.1.1"
   },
   "devDependencies": {
     "acorn": "^7.0.0",
     "babel-jest": "^24.9.0",
-    "babel-preset-jaid": "^6.9.0",
+    "babel-preset-jaid": "^6.9.1",
     "browserslist-config-jaid-node": "^2.2.2",
     "delay": "^4.3.0",
-    "eslint": "^6.1.0",
-    "eslint-config-jaid": "^1.28.0",
+    "eslint": "^6.2.2",
+    "eslint-config-jaid": "^1.28.2",
     "jest": "^24.9.0",
     "rimraf": "^3.0.0",
-    "webpack": "^4.39.2",
-    "webpack-config-jaid": "^5.27.1"
+    "webpack": "^4.39.3",
+    "webpack-config-jaid": "^5.27.3"
   },
   "scripts": {
     "clean": "rimraf dist/",
