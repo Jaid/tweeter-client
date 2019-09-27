@@ -3,7 +3,7 @@ import {logger} from "src/core"
 import fsp from "@absolunet/fsp"
 import {createCanvas, loadImage, registerFont} from "canvas"
 import moment from "moment"
-import jimp from "jimp/es"
+import jimp from "jimp"
 
 import Tweeter from "./Tweeter"
 
