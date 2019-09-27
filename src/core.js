@@ -39,11 +39,6 @@ const core = new JaidCore({
 export const logger = core.logger
 
 /**
- * @type {import("got").GotInstance}
- */
-export const got = core.got
-
-/**
  * @type {import("jaid-core").BaseConfig & Config}
  */
 export const config = core.config

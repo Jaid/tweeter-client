@@ -3,12 +3,16 @@ import ensureArray from "ensure-array"
 import SteamGameUpdate from "src/tweeters/SteamGameUpdate"
 import Test from "src/tweeters/Test"
 
-export default class Main {
+class Main {
 
   /**
    * @type {import("../../tweeters/Tweeter).default")[]}
    */
   tweeters = []
+
+  setCoreReference(core) {
+    this.core = core
+  }
 
   async init() {
     for (const info of ensureArray(config.steamGameUpdates)) {
@@ -21,3 +25,5 @@ export default class Main {
   }
 
 }
+
+export default new Main
