@@ -42,5 +42,6 @@
     "test:debug": "npm run start",
     "prepareActionJest": "npm run build:prod"
   },
-  "name": "tweeter-client"
+  "name": "tweeter-client",
+  "description": "Creates tweets."
 }
