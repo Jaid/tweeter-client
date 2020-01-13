@@ -1,9 +1,9 @@
 # Tweeter Client
 
 
-<a href="https://raw.githubusercontent.com/Jaid/tweeter-client/master/license.txt"><img src="https://img.shields.io/github/license/Jaid/tweeter-client?style=flat-square" alt="License"/></a>  
-<a href="https://actions-badge.atrox.dev/Jaid/tweeter-client/goto"><img src="https://img.shields.io/endpoint.svg?style=flat-square&url=https%3A%2F%2Factions-badge.atrox.dev%2FJaid%2Ftweeter-client%2Fbadge" alt="Build status"/></a> <a href="https://github.com/Jaid/tweeter-client/commits"><img src="https://img.shields.io/github/commits-since/Jaid/tweeter-client/v3.1.0?style=flat-square&logo=github" alt="Commits since v3.1.0"/></a> <a href="https://github.com/Jaid/tweeter-client/commits"><img src="https://img.shields.io/github/last-commit/Jaid/tweeter-client?style=flat-square&logo=github" alt="Last commit"/></a> <a href="https://github.com/Jaid/tweeter-client/issues"><img src="https://img.shields.io/github/issues/Jaid/tweeter-client?style=flat-square&logo=github" alt="Issues"/></a>  
-<a href="https://npmjs.com/package/tweeter-client"><img src="https://img.shields.io/npm/v/tweeter-client?style=flat-square&logo=npm&label=latest%20version" alt="Latest version on npm"/></a> <a href="https://github.com/Jaid/tweeter-client/network/dependents"><img src="https://img.shields.io/librariesio/dependents/npm/tweeter-client?style=flat-square&logo=npm" alt="Dependents"/></a> <a href="https://npmjs.com/package/tweeter-client"><img src="https://img.shields.io/npm/dm/tweeter-client?style=flat-square&logo=npm" alt="Downloads"/></a>
+<a href="https://raw.githubusercontent.com/jaid/tweeter-client/master/license.txt"><img src="https://img.shields.io/github/license/jaid/tweeter-client?style=flat-square" alt="License"/></a> <a href="https://github.com/sponsors/jaid"><img src="https://img.shields.io/badge/<3-Sponsor-FF45F1?style=flat-square" alt="Sponsor tweeter-client"/></a>
+<a href="https://actions-badge.atrox.dev/jaid/tweeter-client/goto"><img src="https://img.shields.io/endpoint.svg?style=flat-square&url=https%3A%2F%2Factions-badge.atrox.dev%2Fjaid%2Ftweeter-client%2Fbadge" alt="Build status"/></a> <a href="https://github.com/jaid/tweeter-client/commits"><img src="https://img.shields.io/github/commits-since/jaid/tweeter-client/v3.1.0?style=flat-square&logo=github" alt="Commits since v3.1.0"/></a> <a href="https://github.com/jaid/tweeter-client/commits"><img src="https://img.shields.io/github/last-commit/jaid/tweeter-client?style=flat-square&logo=github" alt="Last commit"/></a> <a href="https://github.com/jaid/tweeter-client/issues"><img src="https://img.shields.io/github/issues/jaid/tweeter-client?style=flat-square&logo=github" alt="Issues"/></a>  
+<a href="https://npmjs.com/package/tweeter-client"><img src="https://img.shields.io/npm/v/tweeter-client?style=flat-square&logo=npm&label=latest%20version" alt="Latest version on npm"/></a> <a href="https://github.com/jaid/tweeter-client/network/dependents"><img src="https://img.shields.io/librariesio/dependents/npm/tweeter-client?style=flat-square&logo=npm" alt="Dependents"/></a> <a href="https://npmjs.com/package/tweeter-client"><img src="https://img.shields.io/npm/dm/tweeter-client?style=flat-square&logo=npm" alt="Downloads"/></a>
 
 **Creates tweets.**
 
@@ -33,7 +33,6 @@ yarn global add tweeter-client@^3.1.0
 
 
 
-
 ## CLI Usage
 After installing package `tweeter-client` globally, you can use its command line interface.
 ```bash
@@ -53,7 +52,7 @@ tweeter-client --help
 
 Setting up:
 ```bash
-git clone git@github.com:Jaid/tweeter-client.git
+git clone git@github.com:jaid/tweeter-client.git
 cd tweeter-client
 npm install
 ```
