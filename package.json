@@ -43,5 +43,6 @@
     "prepareActionJest": "npm run build:prod"
   },
   "name": "tweeter-client",
-  "description": "Creates tweets."
+  "description": "Creates tweets.",
+  "funding": "https://github.com/sponsors/jaid"
 }
