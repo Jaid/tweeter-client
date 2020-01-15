@@ -13,7 +13,8 @@
     "jimp": "^0.9.3",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
-    "steam-game-update-watcher": "^1.1.1"
+    "steam-game-update-watcher": "^1.1.1",
+    "yargs": "^15.1.0"
   },
   "devDependencies": {
     "acorn": "^7.1.0",
