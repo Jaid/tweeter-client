@@ -1,4 +1,4 @@
-import {logger, config} from "src/core"
+import {config, logger} from "src/core"
 import main from "src/plugins/main"
 
 let currentIndex = 1

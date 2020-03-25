@@ -1,5 +1,6 @@
-import {config} from "src/core"
 import ensureArray from "ensure-array"
+
+import {config} from "src/core"
 import SteamGameUpdate from "src/tweeters/SteamGameUpdate"
 import Test from "src/tweeters/Test"
 

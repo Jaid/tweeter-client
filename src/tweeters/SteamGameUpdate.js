@@ -1,9 +1,10 @@
-import SteamGameUpdateWatcher from "steam-game-update-watcher"
-import {logger} from "src/core"
 import fsp from "@absolunet/fsp"
-import {createCanvas, loadImage, registerFont} from "canvas"
-import moment from "moment"
+import {createCanvas, loadImage} from "canvas"
 import jimp from "jimp"
+import moment from "moment"
+import SteamGameUpdateWatcher from "steam-game-update-watcher"
+
+import {logger} from "src/core"
 
 import Tweeter from "./Tweeter"
 
@@ -32,7 +33,7 @@ export default class extends Tweeter {
     this.watcher.on("contentChanged", async () => {
       try {
         const dataUrl = await this.renderImage()
-        logger.info(dataUrl.substring(0, 50))
+        logger.info(dataUrl.slice(0, 50))
         await this.postMedia(dataUrl)
       } catch (error) {
         logger.error("Tweeter %s could not generate tweet: %s", this.id, error)
