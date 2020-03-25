@@ -8,9 +8,9 @@ export default class Tweeter {
     static apiGot = null
 
     /**
-   * @constructor
-   * @param {string} handle
-   */
+     * @constructor
+     * @param {string} handle
+     */
     constructor(handle) {
       this.handle = handle
       this.index = currentIndex
@@ -19,10 +19,10 @@ export default class Tweeter {
     }
 
     /**
-   * @async
-   * @param {string} text
-   * @param {string|string[]} [media]
-   */
+     * @async
+     * @param {string} text
+     * @param {string|string[]} [media]
+     */
     async post(text, media) {
       if (!Tweeter.apiGot) {
         Tweeter.apiGot = main.core.got.extend({
