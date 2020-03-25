@@ -4,9 +4,9 @@ import jimp from "jimp"
 import moment from "moment"
 import SteamGameUpdateWatcher from "steam-game-update-watcher"
 
-import {logger} from "src/core"
+import Tweeter from "lib/Tweeter"
 
-import Tweeter from "./Tweeter"
+import {logger} from "src/core"
 
 /**
  * @typedef Info

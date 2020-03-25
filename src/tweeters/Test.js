@@ -1,4 +1,4 @@
-import Tweeter from "./Tweeter"
+import Tweeter from "lib/Tweeter"
 
 export default class extends Tweeter {
 

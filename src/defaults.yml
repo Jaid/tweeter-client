@@ -7,5 +7,6 @@ steamGameUpdates:
     handle: patchbydaylight
     backgroundFile: backgrounds/dbd.png
     randomHue: 20
+deadByDaylightBuilds: []
 startupHandle: dotapatch
 apiUser: jaid
