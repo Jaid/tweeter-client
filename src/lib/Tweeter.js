@@ -30,22 +30,19 @@ export default class Tweeter {
          method: "POST",
          prefixUrl: `${config.apiProtocol}://${config.apiHost}`,
          port: config.apiPort,
-         headers: {
-           "Content-type": "application/json",
-         },
        })
      }
 
      try {
        logger.info("[Tweeter #%s] @%s: %s", this.index, this.handle, text)
        const result = await Tweeter.apiGot.post("tweet", {
-         body: JSON.stringify({
+         json: {
            text,
            media,
            handle: this.handle,
            apiUser: config.apiUser,
            apiKey: config.apiKey,
-         }),
+         },
        })
        logger.debug("Tweet result: [%s %s] %s", result.statusCode, result.statusMessage, result.body)
      } catch (error) {
