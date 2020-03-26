@@ -1,7 +1,6 @@
-import path from "path"
-
 import delay from "delay"
 import ms from "ms.macro"
+import path from "path"
 
 it("should run", async () => {
   (process.env.MAIN ? path.resolve(process.env.MAIN) : path.join(__dirname, "..", "src")) |> require
