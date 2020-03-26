@@ -10,6 +10,7 @@
     "dead-by-daylight": "^1.21.0",
     "ensure-array": "^1.0.0",
     "got": "^10.7.0",
+    "has-content": "^1.1.1",
     "jaid-core": "^7.5.0",
     "jimp": "^0.9.6",
     "lodash": "^4.17.15",

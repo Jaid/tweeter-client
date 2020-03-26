@@ -9,15 +9,7 @@ import Tweeter from "lib/Tweeter"
 
 export default class extends Tweeter {
 
-  /**
-   * @constructor
-   * @param {Info} info
-   */
-  constructor(info) {
-    super(info.handle)
-    this.info = info
-    this.start()
-  }
+  static displayName = "DeadByDaylightBuild"
 
   start() {
     schedule.scheduleJob(this.info.cron, () => {

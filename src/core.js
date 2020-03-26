@@ -23,6 +23,13 @@ const core = new JaidCore({
  */
 
 /**
+ * @typedef {Object} TweeterSetup
+ * @prop {string} handle
+ * @prop {bool} dry
+ * @prop {string} type
+ */
+
+/**
  * @typedef {Object} Config
  * @prop {string} apiUser
  * @prop {string} apiKey
@@ -30,7 +37,7 @@ const core = new JaidCore({
  * @prop {string} apiProtocol
  * @prop {string} apiPort
  * @prop {string} startupHandle
- * @prop {SteamGameUpdate[]} steamGameUpdates
+ * @prop {TweeterSetup[]} tweeters
  */
 
 /**

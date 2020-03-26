@@ -1,22 +1,10 @@
 import ensureArray from "ensure-array"
+import {isEmpty} from "has-content"
+import {JaidCorePlugin} from "jaid-core"
 
-import {config} from "src/core"
-import DeadByDaylightBuild from "src/tweeters/DeadByDaylightBuild"
-import SteamGameUpdate from "src/tweeters/SteamGameUpdate"
-import Test from "src/tweeters/Test"
+import tweeterTypes from "lib/tweeterTypes"
 
-const types = [
-  {
-    Type: SteamGameUpdate,
-    configKey: "steamGameUpdates",
-  },
-  {
-    Type: DeadByDaylightBuild,
-    configKey: "deadByDaylightBuilds",
-  },
-]
-
-class Main {
+class Main extends JaidCorePlugin {
 
   /**
    * @type {import("../../tweeters/Tweeter).default")[]}
@@ -28,15 +16,28 @@ class Main {
   }
 
   async init() {
-    for (const {Type, configKey} of types) {
-      const entries = ensureArray(config[configKey])
-      for (const entry of entries) {
-        const tweeter = new Type(entry)
-        this.tweeters.push(tweeter)
-      }
+    const configuredTweeters = ensureArray(this.core.config.tweeters)
+
+    if (isEmpty(configuredTweeters)) {
+      this.log("No tweeters configured!")
+      return
     }
-    if (config.startupHandle) {
-      this.tweeters.push(new Test(config.startupHandle))
+
+    for (const {type, handle, dry, ...options} of configuredTweeters) {
+      const tweeterType = tweeterTypes[type]
+      if (!tweeterType) {
+        this.log(`Unknown tweeter type ${type}`)
+        return
+      }
+      const Type = tweeterType.Type
+      const tweeter = new Type(handle, dry, options)
+      if (!handle) {
+        this.log(`Tweeter #${tweeter.index} does not have a handle`)
+        return
+      }
+      this.tweeters.push(tweeter)
+      this.log("Registered tweeter #%s (%s) for @%s", tweeter.index, Type.displayName, handle)
+      await tweeter.start?.()
     }
   }
 

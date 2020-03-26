@@ -20,15 +20,11 @@ import {logger} from "src/core"
 
 export default class extends Tweeter {
 
-  /**
-   * @constructor
-   * @param {Info} info
-   */
-  constructor(info) {
-    super(info.handle)
-    this.info = info
+  static displayName = "SteamGameUpdate"
+
+  async start() {
     this.watcher = new SteamGameUpdateWatcher({
-      depotId: info.depotId,
+      depotId: this.options.depotId,
     })
     this.watcher.on("contentChanged", async () => {
       try {
@@ -40,7 +36,7 @@ export default class extends Tweeter {
       }
     })
     this.watcher.start()
-    logger.info("Started watching on Steam depot %s (%s)", info.depotId, info.title)
+    logger.info("Started watching on Steam depot %s (%s)", this.options.depotId, this.options.title)
   }
 
   async renderImage() {

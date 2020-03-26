@@ -2,16 +2,9 @@ import Tweeter from "lib/Tweeter"
 
 export default class extends Tweeter {
 
-  /**
-   * @constructor
-   * @param {string} handle
-   */
-  constructor(handle) {
-    super(handle)
-    this.run()
-  }
+  static displayName = "Test"
 
-  async run() {
+  async start() {
     this.post(`${_PKG_TITLE} v${_PKG_VERSION}, ${Date.now()}`)
   }
 
