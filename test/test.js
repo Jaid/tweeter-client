@@ -1,9 +1,0 @@
-import delay from "delay"
-import ms from "ms.macro"
-import path from "path"
-
-it("should run", async () => {
-  (process.env.MAIN ? path.resolve(process.env.MAIN) : path.join(__dirname, "..", "src")) |> require
-  await delay(ms`5 seconds`)
-  process.exit(0)
-}, ms`6 seconds`)
