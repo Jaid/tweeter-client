@@ -43,6 +43,7 @@ npm install --global @jaid/tweeter-client@^4.0.0
 
 
 
+
 ## CLI Usage
 After installing package `tweeter-client` globally, you can use its command line interface.
 ```bash
@@ -52,6 +53,10 @@ For usage instructions:
 ```bash
 tweeter-client --help
 ```
+
+
+
+
 
 
 
@@ -78,4 +83,4 @@ npm run test
 
 ## License
 [MIT License](https://raw.githubusercontent.com/jaid/tweeter-client/master/license.txt)  
-Copyright © 2019, Jaid \<jaid.jsx@gmail.com> (github.com/jaid)
+Copyright © 2020, Jaid \<jaid.jsx@gmail.com> (https://github.com/jaid)
