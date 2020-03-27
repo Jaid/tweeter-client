@@ -6,6 +6,7 @@
   "dependencies": {
     "@absolunet/fsp": "^1.6.2",
     "@babel/runtime": "^7.9.2",
+    "@hapi/joi": "^16.1.8",
     "canvas": "^2.6.1",
     "dead-by-daylight": "^1.21.0",
     "ensure-array": "^1.0.0",

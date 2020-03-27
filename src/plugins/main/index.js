@@ -1,3 +1,4 @@
+import joi from "@hapi/joi"
 import ensureArray from "ensure-array"
 import {isEmpty} from "has-content"
 import {JaidCorePlugin} from "jaid-core"
@@ -26,10 +27,18 @@ class Main extends JaidCorePlugin {
     for (const {type, handle, dry, ...options} of configuredTweeters) {
       const tweeterType = tweeterTypes[type]
       if (!tweeterType) {
-        this.log(`Unknown tweeter type ${type}`)
+        this.logger.warn(`Unknown tweeter type ${type}`)
         return
       }
       const Type = tweeterType.Type
+      if (Type.schema) {
+        const result = Type.schema.validate(options)
+        if (result.error) {
+          this.logger.warn(`Invalid configuration for tweeter type ${type}`)
+          this.logger.warn(result.error.message)
+          throw new Error(result.error.message)
+        }
+      }
       const tweeter = new Type(handle, dry, options)
       if (!handle) {
         this.log(`Tweeter #${tweeter.index} does not have a handle`)
@@ -37,6 +46,9 @@ class Main extends JaidCorePlugin {
       }
       this.tweeters.push(tweeter)
       this.log("Registered tweeter #%s (%s) for @%s", tweeter.index, Type.displayName, handle)
+    }
+
+    for (const tweeter of this.tweeters) {
       await tweeter.start?.()
     }
   }
