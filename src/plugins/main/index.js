@@ -31,6 +31,7 @@ class Main extends JaidCorePlugin {
         return
       }
       const Type = tweeterType.Type
+      let finalOptions = options
       if (Type.schema) {
         const result = Type.schema.validate(options)
         if (result.error) {
@@ -38,8 +39,9 @@ class Main extends JaidCorePlugin {
           this.logger.warn(result.error.message)
           throw new Error(result.error.message)
         }
+        finalOptions = result.value
       }
-      const tweeter = new Type(handle, dry, options)
+      const tweeter = new Type(handle, dry, finalOptions)
       if (!handle) {
         this.log(`Tweeter #${tweeter.index} does not have a handle`)
         return
