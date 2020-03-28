@@ -5,6 +5,9 @@ let currentIndex = 1
 
 export default class Tweeter {
 
+  /**
+   * @type {import("got").Got}
+   */
    static apiGot = null
 
    /**
@@ -19,19 +22,37 @@ export default class Tweeter {
      currentIndex++
    }
 
+   static initStatic() {
+     /**
+      * @type {import("got").Got}
+      */
+     const got = main.core.got
+     Tweeter.apiGot = got.extend({
+       method: "POST",
+       prefixUrl: `${config.apiProtocol}://${config.apiHost}`,
+       port: config.apiPort,
+       hooks: {
+         init: [
+           options => {
+             if (!options.json) {
+               options.json = {}
+             }
+             Object.assign(options.json, {
+               apiUser: config.apiUser,
+               apiKey: config.apiKey,
+             })
+           },
+         ],
+       },
+     })
+   }
+
    /**
      * @async
      * @param {string} text
      * @param {string|string[]} [media]
      */
    async post(text, media) {
-     if (!Tweeter.apiGot) {
-       Tweeter.apiGot = main.core.got.extend({
-         method: "POST",
-         prefixUrl: `${config.apiProtocol}://${config.apiHost}`,
-         port: config.apiPort,
-       })
-     }
 
      try {
        logger.info("[Tweeter #%s] @%s: %s", this.index, this.handle, text)
@@ -40,8 +61,6 @@ export default class Tweeter {
            text,
            media,
            handle: this.handle,
-           apiUser: config.apiUser,
-           apiKey: config.apiKey,
          },
        })
        logger.debug("Tweet result: [%s %s] %s", result.statusCode, result.statusMessage, result.body)

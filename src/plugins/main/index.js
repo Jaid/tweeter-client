@@ -1,8 +1,8 @@
-import joi from "@hapi/joi"
 import ensureArray from "ensure-array"
 import {isEmpty} from "has-content"
 import {JaidCorePlugin} from "jaid-core"
 
+import Tweeter from "lib/Tweeter"
 import tweeterTypes from "lib/tweeterTypes"
 
 class Main extends JaidCorePlugin {
@@ -17,6 +17,8 @@ class Main extends JaidCorePlugin {
   }
 
   async init() {
+    Tweeter.initStatic()
+
     const configuredTweeters = ensureArray(this.core.config.tweeters)
 
     if (isEmpty(configuredTweeters)) {
