@@ -56,6 +56,7 @@ export default class Tweeter {
 
      try {
        logger.info("[Tweeter #%s] @%s: %s", this.index, this.handle, text)
+       logger.debug(`Media length: ${media.length}`)
        const result = await Tweeter.apiGot.post("tweet", {
          json: {
            text,
