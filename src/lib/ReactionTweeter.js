@@ -24,6 +24,17 @@ export default class extends Tweeter {
         },
       }).json()
       this.twit = new Twit(twitCredentials)
+      const tweet = await this.twit.get("statuses/show/1243945837895401473")
+      const shouldHandle = await this.shouldHandleTweet(tweet.data)
+    }
+
+    async starta() {
+      const twitCredentials = await Tweeter.apiGot("credentials", {
+        json: {
+          handle: this.handle,
+        },
+      }).json()
+      this.twit = new Twit(twitCredentials)
       const streamOptions = {}
       if (this.options.track) {
         streamOptions.track = this.options.track

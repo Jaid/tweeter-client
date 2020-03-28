@@ -16,9 +16,11 @@ export default class extends ReactionTweeter {
   // Working QR code:
   // https://twitter.com/borkborkbitch/status/1243853562800566272
 
+  // Randomly found empty QR code:
+  // https://twitter.com/Wolfenpilot687/status/1243942699855577090
+
   async shouldHandleTweet(tweet) {
     if (isEmpty(tweet.extended_entities?.media)) {
-      console.log(`No media in: https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`)
       return false
     }
     for (const mediaEntry of tweet.extended_entities.media) {
@@ -30,12 +32,11 @@ export default class extends ReactionTweeter {
     for (const mediaEntry of tweet.extended_entities.media) {
       const imageBuffer = await got(mediaEntry.media_url).buffer()
       const qrResult = await getQrCodeFromBuffer(imageBuffer)
-      if (qrResult) {
+      if (qrResult?.binaryData?.length) {
         qrCodes.push(qrResult)
       }
     }
     if (isEmpty(qrCodes)) {
-      console.log(`No QR codes in: https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`)
       return false
     }
     return true
