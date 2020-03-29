@@ -43,7 +43,7 @@ class Main extends JaidCorePlugin {
         }
         finalOptions = result.value
       }
-      const tweeter = new Type(handle, dry, finalOptions)
+      const tweeter = new Type(handle, dry, this.logger, finalOptions)
       if (!handle) {
         this.log(`Tweeter #${tweeter.index} does not have a handle`)
         return

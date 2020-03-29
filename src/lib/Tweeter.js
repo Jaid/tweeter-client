@@ -1,4 +1,4 @@
-import {config, logger} from "src/core"
+import {config} from "src/core"
 import main from "src/plugins/main"
 
 let currentIndex = 1
@@ -14,12 +14,16 @@ export default class Tweeter {
      * @constructor
      * @param {string} handle
      */
-   constructor(handle, dry, options) {
+   constructor(handle, dry, logger, options) {
      this.handle = handle
      this.dry = dry
+     this.logger = logger
      this.index = currentIndex
      this.options = options
      currentIndex++
+     for (const [key, value] of Object.entries(this.options)) {
+       this.logger.debug(`${key}: ${JSON.stringify(value)}`)
+     }
    }
 
    static initStatic() {
@@ -55,8 +59,13 @@ export default class Tweeter {
    async post(text, media) {
 
      try {
-       logger.info("[Tweeter #%s] @%s: %s", this.index, this.handle, text)
-       logger.debug(`Media length: ${media.length}`)
+       this.logger.info("[Tweeter #%s] @%s: %s", this.index, this.handle, text)
+       if (media) {
+         this.logger.debug(`Media length: ${media.length}`)
+       }
+       if (this.dry) {
+         return
+       }
        const result = await Tweeter.apiGot.post("tweet", {
          json: {
            text,
@@ -64,9 +73,9 @@ export default class Tweeter {
            handle: this.handle,
          },
        })
-       logger.debug("Tweet result: [%s %s] %s", result.statusCode, result.statusMessage, result.body)
+       this.logger.debug("Tweet result: [%s %s] %s", result.statusCode, result.statusMessage, result.body)
      } catch (error) {
-       logger.error("[Tweeter #%s] Could not send tweet: %s", this.index, error)
+       this.logger.error("[Tweeter #%s] Could not send tweet: %s", this.index, error)
      }
    }
 

@@ -1,4 +1,9 @@
 import joi from "@hapi/joi"
+import ensureArray from "ensure-array"
+import ensureObject from "ensure-object"
+import flattenMultiline from "flatten-multiline"
+import handlebars from "handlebars"
+import regexParser from "regex-parser"
 import Twit from "twit"
 
 import Tweeter from "lib/Tweeter"
@@ -10,6 +15,8 @@ export default class extends Tweeter {
       includeReplies: joi.boolean().default(true),
       track: joi.any(),
       language: joi.any(),
+      filter: joi.any(),
+      text: joi.string(),
     }
 
     /**
@@ -18,6 +25,9 @@ export default class extends Tweeter {
     twit = null
 
     async start() {
+      if (this.options.text) {
+        this.template = handlebars.compile(this.options.text)
+      }
       const twitCredentials = await Tweeter.apiGot("credentials", {
         json: {
           handle: this.handle,
@@ -36,8 +46,26 @@ export default class extends Tweeter {
         if (tweet.retweeted_status) {
           return
         }
+        tweet.flattenedText = flattenMultiline(tweet.text)
+        tweet.link = `https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`
+        this.logger.debug(`@${tweet.user.screen_name}: ${tweet.flattenedText}`)
         if (!this.options.includeReplies && tweet.in_reply_to_status_id) {
+          this.logger.debug("This is a reply, skipping")
           return
+        }
+        if (this.options.filter) {
+          const filters = ensureArray(this.options.filter)
+          for (const filter of filters) {
+            const filterObject = ensureObject(filter, "ensureRegex")
+            if (filterObject.discardRegex && regexParser(filterObject.discardRegex).test(tweet.flattenedText)) {
+              this.logger.debug(`Positive test for ${filterObject.discardRegex}, skipping`)
+              return
+            }
+            if (filterObject.ensureRegex && !regexParser(filterObject.ensureRegex).test(tweet.flattenedText)) {
+              this.logger.debug(`Negative test for ${filterObject.discardRegex}, skipping`)
+              return
+            }
+          }
         }
         if (this.shouldHandleTweet) {
           let shouldHandle
@@ -51,16 +79,51 @@ export default class extends Tweeter {
             return
           }
         }
-        await this.reactToTweet(tweet.id_str)
+        const templateContext = {
+          tweet,
+        }
+        await this.reactToTweet(tweet, templateContext)
       })
     }
 
-    async reactToTweet(tweetId) {
+    async reactToTweet(tweet, templateContext) {
+      const tweetId = tweet.id_str
       if (!this.options.reaction) {
         return
       }
+      if (this.options.reaction === "tweet" && this.template) {
+        await this.post(this.template(templateContext))
+      }
       if (this.options.reaction === "retweet") {
-        await this.twit.post(`statuses/retweet/${tweetId}`)
+        if (this.template) {
+          const text = this.template(templateContext)
+          await this.post(`${text}\n${tweet.link}`)
+        } else {
+          if (this.dry) {
+            this.logger.info(`statuses/retweet/${tweetId}`)
+            return
+          }
+          await this.twit.post(`statuses/retweet/${tweetId}`)
+        }
+      }
+      if (this.options.reaction === "like") {
+        if (this.dry) {
+          this.logger.info(`favorites/create ${tweetId}`)
+          return
+        }
+        await this.twit.post("favorites/create", {
+          id: tweetId,
+        })
+      }
+      if (this.options.reaction === "reply") {
+        if (this.dry) {
+          this.logger.info(`reply: ${this.options.text}`)
+          return
+        }
+        await this.twit.post("statuses/update", {
+          in_reply_to_status_id: tweetId,
+          status: this.options.text,
+        })
       }
     }
 
