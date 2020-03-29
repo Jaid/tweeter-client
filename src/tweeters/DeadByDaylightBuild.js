@@ -28,7 +28,7 @@ export default class extends Tweeter {
     perksType: joi.string(),
     cron: joi.string(),
     backgroundFile: joi.string().required(),
-    template: joi.string().default("Today's Dead by Daylight {{{options.perksType}}} build contains {{{perks}}}."),
+    template: joi.string().default("Today's Dead by Daylight {{options.perksType}} build contains {{perks}}."),
   })
 
   async start() {
