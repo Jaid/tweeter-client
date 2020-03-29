@@ -1,3 +1,4 @@
+import ensureArray from "ensure-array"
 import flattenMultiline from "flatten-multiline"
 
 import {config} from "src/core"
@@ -63,7 +64,7 @@ export default class Tweeter {
      try {
        this.logger.info("[Tweeter #%s] @%s: %s", this.index, this.handle, flattenMultiline(text))
        if (media) {
-         this.logger.debug(`Media length: ${media.length}`)
+         this.logger.debug(`Media length: ${ensureArray(media).map(entry => entry.length).join(", ")}`)
        }
        if (this.dry) {
          return
