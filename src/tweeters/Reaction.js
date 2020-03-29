@@ -44,6 +44,10 @@ export default class extends Tweeter {
       }
       const stream = this.twit.stream("statuses/filter", streamOptions)
       stream.on("tweet", async tweet => {
+        if (tweet.user.screen_name.toLowerCase() === this.handle.toLowerCase()) {
+          // https://i.imgur.com/ztyjOQa.png
+          return
+        }
         if (tweet.retweeted_status) {
           return
         }
