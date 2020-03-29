@@ -1,3 +1,5 @@
+import flattenMultiline from "flatten-multiline"
+
 import {config} from "src/core"
 import main from "src/plugins/main"
 
@@ -59,7 +61,7 @@ export default class Tweeter {
    async post(text, media) {
 
      try {
-       this.logger.info("[Tweeter #%s] @%s: %s", this.index, this.handle, text)
+       this.logger.info("[Tweeter #%s] @%s: %s", this.index, this.handle, flattenMultiline(text))
        if (media) {
          this.logger.debug(`Media length: ${media.length}`)
        }
