@@ -764,5 +764,4 @@ for (let i = 0; i < 256; i++) {
   }
 }
 
-
 export default AnimalCrossingFormat

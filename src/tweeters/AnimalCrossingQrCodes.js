@@ -4,6 +4,7 @@ import {isEmpty} from "has-content"
 
 import AnimalCrossingFormat from "lib/AnimalCrossingFormat"
 import getQrCodeFromBuffer from "lib/getQrCodeFromBuffer"
+import isLikelyDesign from "lib/isLikelyDesign"
 
 import Reaction from "src/tweeters/Reaction"
 
@@ -48,6 +49,9 @@ export default class extends Reaction {
         continue
       }
       if (!designMeta.patternTypeTitle === "Unimplemented pattern type") {
+        continue
+      }
+      if (!isLikelyDesign(designMeta)) {
         continue
       }
       designs.push(designMeta)
