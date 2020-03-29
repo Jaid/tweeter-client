@@ -87,11 +87,15 @@ export default class extends Tweeter {
             return
           }
         }
-        const templateContext = {
-          tweet,
-        }
-        await this.reactToTweet(tweet, templateContext)
+        await this.handleTweet(tweet)
       })
+    }
+
+    async handleTweet(tweet) {
+      const templateContext = {
+        tweet,
+      }
+      await this.reactToTweet(tweet, templateContext)
     }
 
     async like(tweet) {

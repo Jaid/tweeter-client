@@ -1,6 +1,7 @@
 import joi from "@hapi/joi"
 import got from "got"
 import {isEmpty} from "has-content"
+import qrcode from "qrcode"
 
 import getQrCodeFromBuffer from "lib/getQrCodeFromBuffer"
 
@@ -37,15 +38,35 @@ export default class extends Reaction {
         continue
       }
       codes.push(qrResult.data)
+      tweet.hasQrCode = true
+    }
+    if (!tweet.hasQrCode) {
+      const codeFromText = /(?<code>(?:\d{4}[ -]?){2}\d{4})/.exec(tweet.flattenedText)
+      if (codeFromText?.groups?.code) {
+        const codeFromTextNormalized = codeFromText.groups.code.replace(/[ -]/g, "")
+        this.logger.debug(`Extracted code: ${codeFromTextNormalized}`)
+        codes.push(codeFromTextNormalized)
+      }
     }
     if (isEmpty(codes)) {
       return false
     }
-    tweet.codes = codes.map(code => {
+    tweet.codes = codes
+    tweet.codesFormatted = codes.map(code => {
       return `${code.slice(0, 4)} ${code.slice(4, 8)} ${code.slice(8, 12)}`
     })
-    tweet.codesString = tweet.codes.split("\n")
+    tweet.codesString = tweet.codesFormatted.split("\n")
     return true
+  }
+
+  async handleTweet(tweet) {
+    if (tweet.hasQrCode) {
+      await super.handleTweet(tweet)
+      return
+    }
+    const text = this.template(templateContext)
+    const qrCode = await qrcode.toDataURL()
+    await this.post(`abc\n${tweet.codeString}`, qrCode)
   }
 
 }
