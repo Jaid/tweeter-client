@@ -183,6 +183,7 @@ class AnimalCrossingFormat {
       textureSize: this.width,
       patternType: this.patternType,
       patternTypeTitle: AnimalCrossingFormat.getTypeStr(this.patternType),
+      byteLength: this.byteLength,
     }
     return result
   }
