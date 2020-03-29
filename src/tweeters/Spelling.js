@@ -22,20 +22,14 @@ export default class Spelling extends Reaction {
         this.options.reaction = "retweet"
       }
       await super.start()
-      this.checkLeadingQuotesRegex = regexParser(`/["„“]${this.options.track}/i`)
-      this.checkTrailingQuotesRegex = regexParser(`/${this.options.track}["„“]/i`)
+      this.checkQuotesRegex = regexParser(`/["„“'‚‘]${this.options.track}["„“'‚‘]/i`)
       this.checkLeadingLettersRegex = regexParser(`/\\w${this.options.track}/i`)
       this.checkTrailingLettersRegex = regexParser(`/${this.options.track}\\w/i`)
     }
 
     async shouldHandleTweet(tweet) {
-      if (this.checkLeadingQuotesRegex.test(tweet.flattenedText)) {
-        this.logger.debug("Found leading quotes, skipping (assuming author is not dumb)")
-        await this.like(tweet)
-        return false
-      }
-      if (this.checkTrailingQuotesRegex.test(tweet.flattenedText)) {
-        this.logger.debug("Found trailing quotes, skipping (assuming author is not dumb)")
+      if (this.checkQuotesRegex.test(tweet.flattenedText)) {
+        this.logger.debug("Found quotes, skipping (assuming author is not dumb)")
         await this.like(tweet)
         return false
       }
