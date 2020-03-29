@@ -7,5 +7,19 @@ export default designMetaData => {
   if (designMetaData.byteLength !== 620) {
     return false
   }
-  return /^[\w ]+$/i.test(removeAccents(designMetaData.authorTitle))
+  if (!designMetaData.patternTypeTitle) {
+    return false
+  }
+  if (!designMetaData.patternTypeTitle === "Unimplemented pattern type") {
+    return false
+  }
+  const authorIsLetters = /^[\w ]+$/i.test(removeAccents(designMetaData.authorTitle))
+  if (!authorIsLetters) {
+    return false
+  }
+  const townIsLetters = /^[\w ]+$/i.test(removeAccents(designMetaData.townTitle))
+  if (!townIsLetters) {
+    return false
+  }
+  return true
 }

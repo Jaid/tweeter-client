@@ -45,12 +45,6 @@ export default class extends Reaction {
       } catch {
         continue
       }
-      if (!designMeta.patternTypeTitle) {
-        continue
-      }
-      if (!designMeta.patternTypeTitle === "Unimplemented pattern type") {
-        continue
-      }
       if (!isLikelyDesign(designMeta)) {
         continue
       }
