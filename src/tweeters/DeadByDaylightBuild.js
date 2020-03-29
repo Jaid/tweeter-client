@@ -32,7 +32,7 @@ export default class extends Tweeter {
   })
 
   async start() {
-    this.template = handlebars.compile(this.options.template)
+    this.template = handlebars.compile(this.options.template, {noEscape: true})
     if (!this.options.cron) {
       await this.run()
     }

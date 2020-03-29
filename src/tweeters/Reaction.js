@@ -27,7 +27,7 @@ export default class extends Tweeter {
 
     async start() {
       if (this.options.text) {
-        this.template = handlebars.compile(this.options.text)
+        this.template = handlebars.compile(this.options.text, {noEscape: true})
       }
       const twitCredentials = await Tweeter.apiGot("credentials", {
         json: {
