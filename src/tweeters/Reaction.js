@@ -83,6 +83,7 @@ export default class extends Tweeter {
             return
           }
           if (!shouldHandle) {
+            this.logger.debug("Skipped by shouldHandleTweet")
             return
           }
         }
