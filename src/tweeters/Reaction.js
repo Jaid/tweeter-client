@@ -48,7 +48,8 @@ export default class extends Tweeter {
           return
         }
         tweet.flattenedText = flattenMultiline(tweet.text)
-        tweet.link = `https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`
+        tweet.shortLink = `twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`
+        tweet.link = `https://${tweet.shortLink}`
         if (hasContent(tweet.user.name) && !tweet.user.name.includes("@")) {
           tweet.authorTitle = tweet.user.name
         } else {
@@ -92,44 +93,57 @@ export default class extends Tweeter {
       })
     }
 
+    async like(tweet) {
+      if (this.dry) {
+        this.logger.info(`Like ${tweet.shortLink}`)
+        return
+      }
+      await this.twit.post("favorites/create", {
+        id: tweet.id_str,
+      })
+    }
+
+    async reply(tweet, text) {
+      if (this.dry) {
+        this.logger.info(`Reply to ${tweet.shortLink}: ${text}`)
+        return
+      }
+      await this.twit.post("statuses/update", {
+        in_reply_to_status_id: tweet.id_str,
+        status: this.options.text,
+      })
+    }
+
+    async retweet(tweet) {
+      if (this.dry) {
+        this.logger.info(`Retweet ${tweet.shortLink}`)
+        return
+      }
+      await this.twit.post(`statuses/retweet/${tweet.id_str}`)
+    }
+
     async reactToTweet(tweet, templateContext) {
-      const tweetId = tweet.id_str
       if (!this.options.reaction) {
         return
       }
       if (this.options.reaction === "tweet" && this.template) {
-        await this.post(this.template(templateContext))
+        const text = this.template(templateContext)
+        await this.post(text)
       }
       if (this.options.reaction === "retweet") {
         if (this.template) {
           const text = this.template(templateContext)
           await this.post(`${text}\n${tweet.link}`)
         } else {
-          if (this.dry) {
-            this.logger.info(`statuses/retweet/${tweetId}`)
-            return
-          }
-          await this.twit.post(`statuses/retweet/${tweetId}`)
+          await this.retweet(tweet)
         }
       }
       if (this.options.reaction === "like") {
-        if (this.dry) {
-          this.logger.info(`favorites/create ${tweetId}`)
-          return
-        }
-        await this.twit.post("favorites/create", {
-          id: tweetId,
-        })
+        await this.like(tweet)
       }
       if (this.options.reaction === "reply") {
-        if (this.dry) {
-          this.logger.info(`reply: ${this.options.text}`)
-          return
-        }
-        await this.twit.post("statuses/update", {
-          in_reply_to_status_id: tweetId,
-          status: this.options.text,
-        })
+        const text = this.template(templateContext)
+        await this.reply(tweet, text)
       }
     }
 
