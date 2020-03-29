@@ -40,7 +40,13 @@ export default class extends Tweeter {
           return
         }
         if (this.shouldHandleTweet) {
-          const shouldHandle = await this.shouldHandleTweet(tweet)
+          let shouldHandle
+          try {
+            shouldHandle = await this.shouldHandleTweet(tweet)
+          } catch (error) {
+            console.error(error)
+            return
+          }
           if (!shouldHandle) {
             return
           }

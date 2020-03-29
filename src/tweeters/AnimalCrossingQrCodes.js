@@ -2,15 +2,17 @@ import joi from "@hapi/joi"
 import got from "got"
 import {isEmpty} from "has-content"
 
+import AnimalCrossingFormat from "lib/AnimalCrossingFormat"
 import getQrCodeFromBuffer from "lib/getQrCodeFromBuffer"
-import ReactionTweeter from "lib/ReactionTweeter"
 
-export default class extends ReactionTweeter {
+import Reaction from "src/tweeters/Reaction"
 
-  static displayName = "RetweetQrCodes"
+export default class extends Reaction {
+
+  static displayName = "AnimalCrossingQrCodes"
 
   static schema = joi.object().keys({
-    ...ReactionTweeter.baseSchema,
+    ...Reaction.baseSchema,
   })
 
   // Working QR code:
@@ -28,15 +30,29 @@ export default class extends ReactionTweeter {
         return false
       }
     }
-    const qrCodes = []
+    const designs = []
     for (const mediaEntry of tweet.extended_entities.media) {
       const imageBuffer = await got(mediaEntry.media_url).buffer()
       const qrResult = await getQrCodeFromBuffer(imageBuffer)
-      if (qrResult?.binaryData?.length) {
-        qrCodes.push(qrResult)
+      if (!qrResult?.binaryData?.length) {
+        continue
       }
+      let designMeta
+      try {
+        const design = new AnimalCrossingFormat(qrResult.binaryData)
+        designMeta = design.toJson()
+      } catch {
+        continue
+      }
+      if (!designMeta.patternTypeTitle) {
+        continue
+      }
+      if (!designMeta.patternTypeTitle === "Unimplemented pattern type") {
+        continue
+      }
+      designs.push(designMeta)
     }
-    if (isEmpty(qrCodes)) {
+    if (isEmpty(designs)) {
       return false
     }
     return true

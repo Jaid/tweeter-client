@@ -1,5 +1,6 @@
+import AnimalCrossingQrCodes from "src/tweeters/AnimalCrossingQrCodes"
 import DeadByDaylightBuild from "src/tweeters/DeadByDaylightBuild"
-import QrCodeReactions from "src/tweeters/QrCodeReactions"
+import Reaction from "src/tweeters/Reaction"
 import SteamGameUpdate from "src/tweeters/SteamGameUpdate"
 import Test from "src/tweeters/Test"
 
@@ -13,7 +14,10 @@ export default {
   deadByDaylightBuild: {
     Type: DeadByDaylightBuild,
   },
-  qrCodeReactions: {
-    Type: QrCodeReactions,
+  reaction: {
+    Type: Reaction,
+  },
+  animalCrossingQrCodes: {
+    Type: AnimalCrossingQrCodes,
   },
 }
