@@ -29,3 +29,11 @@ it("should parse an Animal Crossing tune", async () => {
   const metadata = animalCrossingDesign.toJson()
   expect(isLikelyDesign(metadata)).toBeFalsy()
 })
+
+it("should parse a Pokemon GO friend code", async () => {
+  const imageFile = path.join(__dirname, "PokemonGoFriendCode.jpg")
+  const buffer = await fsp.readFile(imageFile)
+  const qrCode = await getQrCodeFromBuffer(buffer)
+  expect(qrCode.binaryData.length).toBe(12)
+  expect(qrCode.data).toBe("668283334387")
+})
