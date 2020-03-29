@@ -17,10 +17,10 @@ export default class Spelling extends Reaction {
     twit = null
 
     async start() {
-      if (this.options.reaction) {
-        this.logger.warn("Option reaction should not be set for type Spelling")
+      if (!this.options.reaction) {
+        this.logger.warn("Option reaction not given, will default to retweet")
+        this.options.reaction = "retweet"
       }
-      this.options.reaction = "retweet"
       await super.start()
       this.checkLeadingQuotesRegex = regexParser(`/["„“]${this.options.track}/i`)
       this.checkTrailingQuotesRegex = regexParser(`/${this.options.track}["„“]/i`)
