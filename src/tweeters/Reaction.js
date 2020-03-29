@@ -3,6 +3,7 @@ import ensureArray from "ensure-array"
 import ensureObject from "ensure-object"
 import flattenMultiline from "flatten-multiline"
 import handlebars from "handlebars"
+import hasContent from "has-content"
 import regexParser from "regex-parser"
 import Twit from "twit"
 
@@ -48,6 +49,11 @@ export default class extends Tweeter {
         }
         tweet.flattenedText = flattenMultiline(tweet.text)
         tweet.link = `https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`
+        if (hasContent(tweet.user.name) && !tweet.user.name.includes("@")) {
+          tweet.authorTitle = tweet.user.name
+        } else {
+          tweet.authorTitle = tweet.user.screen_name
+        }
         this.logger.debug(`@${tweet.user.screen_name}: ${tweet.flattenedText}`)
         if (!this.options.includeReplies && tweet.in_reply_to_status_id) {
           this.logger.debug("This is a reply, skipping")
