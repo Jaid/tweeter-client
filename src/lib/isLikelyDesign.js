@@ -1,8 +1,4 @@
-import removeAccents from "remove-accents"
-
-function isLetters(input) {
-  return /^[\w ]+$/.test(removeAccents(input))
-}
+import isOnlyLetters from "./isOnlyLetters"
 
 export default designMetaData => {
   if (!designMetaData.authorTitle) {
@@ -20,11 +16,11 @@ export default designMetaData => {
   if (!designMetaData.patternTypeTitle === "Unimplemented pattern type") {
     return false
   }
-  const authorIsLetters = isLetters(designMetaData.authorTitle)
+  const authorIsLetters = isOnlyLetters(designMetaData.authorTitle)
   if (!authorIsLetters) {
     return false
   }
-  const townIsLetters = isLetters(designMetaData.townTitle)
+  const townIsLetters = isOnlyLetters(designMetaData.townTitle)
   if (!townIsLetters) {
     return false
   }

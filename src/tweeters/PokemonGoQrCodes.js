@@ -1,9 +1,12 @@
 import joi from "@hapi/joi"
+import dataUrls from "data-urls"
 import got from "got"
 import hasContent, {isEmpty} from "has-content"
+import Jimp from "jimp"
 import qrcode from "qrcode"
 
 import getQrCodeFromBuffer from "lib/getQrCodeFromBuffer"
+import isOnlyLetters from "lib/isOnlyLetters"
 
 import Reaction from "src/tweeters/Reaction"
 
@@ -40,7 +43,6 @@ export default class extends Reaction {
     if (!tweet.hasQrCode) {
       const codeFromTextMatch = /(?<code>(?:\d{4}[ -]?){2}\d{4})/.exec(tweet.flattenedText)
       if (codeFromTextMatch?.groups.code) {
-        this.logger.debug("FOUND")
         const codeFromText = codeFromTextMatch.groups.code.replace(/[ -]/g, "")
         this.logger.debug(`Extracted code: ${codeFromText}`)
         codes.push(codeFromText)
@@ -54,6 +56,9 @@ export default class extends Reaction {
       return `${code.slice(0, 4)} ${code.slice(4, 8)} ${code.slice(8, 12)}`
     })
     tweet.codesString = tweet.codesFormatted.join("\n")
+    if (hasContent(tweet.user.location) && isOnlyLetters(tweet.user.location)) {
+      tweet.playerLocation = tweet.user.location
+    }
     return true
   }
 
@@ -66,11 +71,15 @@ export default class extends Reaction {
       tweet,
     })
     const renderJobs = tweet.codes.map(async code => {
-      const dataUrl = await qrcode.toDataURL(code, {
+      const qrUrl = await qrcode.toDataURL(code, {
         errorCorrectionLevel: "L",
         scale: 32,
       })
-      return dataUrl
+      const qrBuffer = dataUrls(qrUrl).body
+      const qrJimp = await Jimp.create(qrBuffer)
+      qrJimp.background(0xFFFFFFFF)
+      qrJimp.contain(1920, 1080)
+      return qrJimp.getBase64Async(Jimp.MIME_PNG)
     })
     const qrCodeImages = await Promise.all(renderJobs)
     await this.post(`${text}\n${tweet.link}`, qrCodeImages)

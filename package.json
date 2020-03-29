@@ -8,6 +8,7 @@
     "@babel/runtime": "^7.9.2",
     "@hapi/joi": "^17.1.1",
     "canvas": "^2.6.1",
+    "data-urls": "^2.0.0",
     "dead-by-daylight": "^1.21.0",
     "ensure-array": "^1.0.0",
     "ensure-object": "^1.0.1",
