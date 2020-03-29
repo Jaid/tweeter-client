@@ -1,7 +1,14 @@
 import removeAccents from "remove-accents"
 
+function isLetters(input) {
+  return /^[\w ]+$/.test(removeAccents(input))
+}
+
 export default designMetaData => {
   if (!designMetaData.authorTitle) {
+    return false
+  }
+  if (!designMetaData.townTitle) {
     return false
   }
   if (designMetaData.byteLength !== 620) {
@@ -13,11 +20,11 @@ export default designMetaData => {
   if (!designMetaData.patternTypeTitle === "Unimplemented pattern type") {
     return false
   }
-  const authorIsLetters = /^[\w ]+$/i.test(removeAccents(designMetaData.authorTitle))
+  const authorIsLetters = isLetters(designMetaData.authorTitle)
   if (!authorIsLetters) {
     return false
   }
-  const townIsLetters = /^[\w ]+$/i.test(removeAccents(designMetaData.townTitle))
+  const townIsLetters = isLetters(designMetaData.townTitle)
   if (!townIsLetters) {
     return false
   }

@@ -30,6 +30,17 @@ it("should parse an Animal Crossing tune", async () => {
   expect(isLikelyDesign(metadata)).toBeFalsy()
 })
 
+it("should flag an unrelated QR code as negative", async () => {
+  const imageFile = path.join(__dirname, "AnimalCrossingUnrelated.jpg")
+  const buffer = await fsp.readFile(imageFile)
+  const qrCode = await getQrCodeFromBuffer(buffer)
+  const byteArray = new Uint8Array(qrCode.binaryData)
+  const animalCrossingDesign = new AnimalCrossingFormat(byteArray)
+  const metadata = animalCrossingDesign.toJson()
+  const isDesign = isLikelyDesign(metadata)
+  expect(isDesign).toBeFalsy()
+})
+
 it("should parse a Pokemon GO friend code", async () => {
   const imageFile = path.join(__dirname, "PokemonGoFriendCode.jpg")
   const buffer = await fsp.readFile(imageFile)

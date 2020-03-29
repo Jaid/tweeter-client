@@ -35,7 +35,7 @@ export default class extends Reaction {
     for (const mediaEntry of tweet.extended_entities.media) {
       const imageBuffer = await got(mediaEntry.media_url).buffer()
       const qrResult = await getQrCodeFromBuffer(imageBuffer)
-      if (!qrResult?.binaryData?.length) {
+      if (qrResult?.binaryData.length !== 620) {
         continue
       }
       let designMeta
