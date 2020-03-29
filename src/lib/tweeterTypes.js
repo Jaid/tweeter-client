@@ -1,6 +1,7 @@
 import AnimalCrossingQrCodes from "src/tweeters/AnimalCrossingQrCodes"
 import DeadByDaylightBuild from "src/tweeters/DeadByDaylightBuild"
 import Reaction from "src/tweeters/Reaction"
+import Spelling from "src/tweeters/Spelling"
 import SteamGameUpdate from "src/tweeters/SteamGameUpdate"
 import Test from "src/tweeters/Test"
 
@@ -19,5 +20,8 @@ export default {
   },
   animalCrossingQrCodes: {
     Type: AnimalCrossingQrCodes,
+  },
+  spelling: {
+    Type: Spelling,
   },
 }
