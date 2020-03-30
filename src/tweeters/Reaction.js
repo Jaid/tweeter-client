@@ -18,6 +18,7 @@ export default class extends Tweeter {
       filter: joi.any(),
       text: joi.string(),
       likeMentions: joi.bool(),
+      testTweet: joi.string(),
     }
 
     /**
@@ -43,49 +44,7 @@ export default class extends Tweeter {
         streamOptions.language = this.options.language
       }
       const stream = this.twit.stream("statuses/filter", streamOptions)
-      stream.on("tweet", async tweet => {
-        if (tweet.user.screen_name.toLowerCase() === this.handle.toLowerCase()) {
-          // https://i.imgur.com/ztyjOQa.png
-          return
-        }
-        if (tweet.retweeted_status) {
-          return
-        }
-        extendTweet(tweet)
-        this.logger.debug(`@${tweet.user.screen_name}: ${tweet.flattenedText}`)
-        if (!this.options.includeReplies && tweet.in_reply_to_status_id) {
-          this.logger.debug("This is a reply, skipping")
-          return
-        }
-        if (this.options.filter) {
-          const filters = ensureArray(this.options.filter)
-          for (const filter of filters) {
-            const filterObject = ensureObject(filter, "ensureRegex")
-            if (filterObject.discardRegex && regexParser(filterObject.discardRegex).test(tweet.flattenedText)) {
-              this.logger.debug(`Positive test for ${filterObject.discardRegex}, skipping`)
-              return
-            }
-            if (filterObject.ensureRegex && !regexParser(filterObject.ensureRegex).test(tweet.flattenedText)) {
-              this.logger.debug(`Negative test for ${filterObject.discardRegex}, skipping`)
-              return
-            }
-          }
-        }
-        if (this.shouldHandleTweet) {
-          let shouldHandle
-          try {
-            shouldHandle = await this.shouldHandleTweet(tweet)
-          } catch (error) {
-            console.error(error)
-            return
-          }
-          if (!shouldHandle) {
-            this.logger.debug("Skipped by shouldHandleTweet")
-            return
-          }
-        }
-        await this.handleTweet(tweet)
-      })
+      stream.on("tweet", this.onTweet.bind(this))
       if (this.options.likeMentions) {
         const track = `@${this.handle.toLowerCase()}`
         this.mentionsStream = this.twit.stream("statuses/filter", {track})
@@ -94,6 +53,61 @@ export default class extends Tweeter {
           this.like(tweet)
         })
       }
+      if (this.options.testTweet) {
+        // Reference: https://developer.twitter.com/en/docs/tweets/post-and-engage/api-reference/get-statuses-show-id
+        const {data: tweet} = await this.twit.get("statuses/show", {
+          id: this.options.testTweet,
+          include_entities: true,
+          trim_user: false,
+          include_ext_alt_text: true,
+        })
+        this.logger.info(`${"Testing tweet: twitter.com/"}${tweet.user.screen_name}/status/${tweet.id_str}`)
+        await this.onTweet(tweet)
+      }
+    }
+
+    async onTweet(tweet) {
+      if (tweet.user.screen_name.toLowerCase() === this.handle.toLowerCase()) {
+        // https://i.imgur.com/ztyjOQa.png
+        return
+      }
+      if (tweet.retweeted_status) {
+        return
+      }
+      extendTweet(tweet)
+      this.logger.debug(`@${tweet.user.screen_name}: ${tweet.flattenedText}`)
+      if (!this.options.includeReplies && tweet.in_reply_to_status_id) {
+        this.logger.debug("This is a reply, skipping")
+        return
+      }
+      if (this.options.filter) {
+        const filters = ensureArray(this.options.filter)
+        for (const filter of filters) {
+          const filterObject = ensureObject(filter, "ensureRegex")
+          if (filterObject.discardRegex && regexParser(filterObject.discardRegex).test(tweet.flattenedText)) {
+            this.logger.debug(`Positive test for ${filterObject.discardRegex}, skipping`)
+            return
+          }
+          if (filterObject.ensureRegex && !regexParser(filterObject.ensureRegex).test(tweet.flattenedText)) {
+            this.logger.debug(`Negative test for ${filterObject.discardRegex}, skipping`)
+            return
+          }
+        }
+      }
+      if (this.shouldHandleTweet) {
+        let shouldHandle
+        try {
+          shouldHandle = await this.shouldHandleTweet(tweet)
+        } catch (error) {
+          console.error(error)
+          return
+        }
+        if (!shouldHandle) {
+          this.logger.debug("Skipped by shouldHandleTweet")
+          return
+        }
+      }
+      await this.handleTweet(tweet)
     }
 
     async handleTweet(tweet) {
