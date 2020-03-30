@@ -48,3 +48,14 @@ it("should parse a Pokemon GO friend code", async () => {
   expect(qrCode.binaryData.length).toBe(12)
   expect(qrCode.data).toBe("668283334387")
 })
+
+it("should parse a Pokemon GO friend code 2", async () => {
+  // Taken from
+  // https://twitter.com/Kaikonyan/status/1244538807422197762
+  const imageFile = path.join(__dirname, "PokemonGoFriendCodeScreenshot.jpg")
+  const buffer = await fsp.readFile(imageFile)
+  const qrCode = await getQrCodeFromBuffer(buffer)
+  expect(qrCode.binaryData.length).toBe(12)
+  expect(qrCode.data.length).toBe(12)
+  expect(qrCode.data).toBe("937632191182")
+})
