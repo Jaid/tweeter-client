@@ -16,11 +16,11 @@ export default designMetaData => {
   if (!designMetaData.patternTypeTitle === "Unimplemented pattern type") {
     return false
   }
-  const authorIsLetters = isOnlyLetters(designMetaData.authorTitle)
+  const authorIsLetters = isOnlyLetters(designMetaData.authorTitle, " -_")
   if (!authorIsLetters) {
     return false
   }
-  const townIsLetters = isOnlyLetters(designMetaData.townTitle)
+  const townIsLetters = isOnlyLetters(designMetaData.townTitle, " -_")
   if (!townIsLetters) {
     return false
   }
