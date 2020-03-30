@@ -85,6 +85,7 @@ export default class extends Tweeter {
     const foregroundJimp = await Jimp.create(foregroundBuffer)
     const backgroundBuffer = await this.getBackgroundBuffer()
     const backgroundJimp = await Jimp.create(backgroundBuffer)
+    foregroundJimp.contain(backgroundJimp.getWidth(), backgroundJimp.getHeight())
     backgroundJimp.composite(foregroundJimp, 0, 0)
     const outputBuffer = await backgroundJimp.getBase64Async(Jimp.MIME_PNG)
     await this.post(this.getText(picks), outputBuffer)
