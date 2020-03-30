@@ -18,6 +18,7 @@ export default class extends Tweeter {
       language: joi.any(),
       filter: joi.any(),
       text: joi.string(),
+      likeMentions: joi.bool(),
     }
 
     /**
@@ -94,6 +95,13 @@ export default class extends Tweeter {
         }
         await this.handleTweet(tweet)
       })
+      if (this.options.likeMentions) {
+        const track = `@${this.handle.toLowerCase()}`
+        this.mentionsStream = this.twit.stream("statuses/filter", {track})
+        this.mentionsStream.on("tweet", tweet => {
+          this.like(tweet)
+        })
+      }
     }
 
     async handleTweet(tweet) {
