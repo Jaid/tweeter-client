@@ -3,9 +3,6 @@ import regexParser from "regex-parser"
 import removeAccents from "remove-accents"
 
 export default (input, allowedSymbols) => {
-  if (allowedSymbols) {
-    return
-  }
   let regex
   if (allowedSymbols) {
     regex = regexParser(`/^[\\da-z${escapeStringRegexp(allowedSymbols)}]+$/i`)
