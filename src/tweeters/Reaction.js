@@ -1,12 +1,11 @@
 import joi from "@hapi/joi"
 import ensureArray from "ensure-array"
 import ensureObject from "ensure-object"
-import flattenMultiline from "flatten-multiline"
 import handlebars from "handlebars"
-import hasContent from "has-content"
 import regexParser from "regex-parser"
 import Twit from "twit"
 
+import extendTweet from "lib/extendTweet"
 import Tweeter from "lib/Tweeter"
 
 export default class extends Tweeter {
@@ -52,15 +51,7 @@ export default class extends Tweeter {
         if (tweet.retweeted_status) {
           return
         }
-        tweet.fullText = tweet.extended_tweet?.full_text || tweet.text
-        tweet.flattenedText = flattenMultiline(tweet.fullText)
-        tweet.shortLink = `twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`
-        tweet.link = `https://${tweet.shortLink}`
-        if (hasContent(tweet.user.name) && !tweet.user.name.includes("@")) {
-          tweet.authorTitle = tweet.user.name
-        } else {
-          tweet.authorTitle = tweet.user.screen_name
-        }
+        extendTweet(tweet)
         this.logger.debug(`@${tweet.user.screen_name}: ${tweet.flattenedText}`)
         if (!this.options.includeReplies && tweet.in_reply_to_status_id) {
           this.logger.debug("This is a reply, skipping")
@@ -99,6 +90,7 @@ export default class extends Tweeter {
         const track = `@${this.handle.toLowerCase()}`
         this.mentionsStream = this.twit.stream("statuses/filter", {track})
         this.mentionsStream.on("tweet", tweet => {
+          extendTweet(tweet)
           this.like(tweet)
         })
       }
