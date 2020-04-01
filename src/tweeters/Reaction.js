@@ -19,13 +19,13 @@ export default class Reaction extends Tweeter {
       language: joi.any(),
       filter: joi.any(),
       testTweet: joi.string(),
+      track: joi.any(),
     }
 
     static schema = {
       ...Reaction.baseSchema,
       text: joi.string(),
       reaction: joi.any(),
-      track: joi.any(),
     }
 
     /**
