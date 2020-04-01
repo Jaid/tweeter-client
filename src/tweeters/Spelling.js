@@ -7,6 +7,7 @@ export default class Spelling extends Reaction {
 
     static schema = joi.object().keys({
       ...Reaction.baseSchema,
+      like: joi.bool().default(true),
     })
 
     /**
@@ -38,7 +39,9 @@ export default class Spelling extends Reaction {
     }
 
     async handleTweet(tweet) {
-      await this.like(tweet)
+      if (this.options.like) {
+        await this.like(tweet)
+      }
       if (this.checkQuotesRegex.test(tweet.flattenedText)) {
         this.logger.debug(`Will not make a tweet assuming author @${tweet.user.screen_name} is not dumb`)
         return
