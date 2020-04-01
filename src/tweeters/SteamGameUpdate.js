@@ -20,8 +20,6 @@ import {logger} from "src/core"
 
 export default class extends Tweeter {
 
-  static displayName = "SteamGameUpdate"
-
   async start() {
     this.watcher = new SteamGameUpdateWatcher({
       depotId: this.options.depotId,

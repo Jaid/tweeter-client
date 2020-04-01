@@ -64,7 +64,7 @@ class Main extends JaidCorePlugin {
         throw new Error(`Did not receive info for handle ${handle} from server`)
       }
       this.tweeters.push(tweeter)
-      this.log("Registered tweeter #%s (%s) for @%s", tweeter.index, Type.displayName, handle)
+      this.log("Registered tweeter #%s (%s) for @%s", tweeter.index, type, handle)
     }
 
     for (const tweeter of this.tweeters) {

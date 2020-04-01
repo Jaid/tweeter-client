@@ -22,8 +22,6 @@ function sortPerks(perk1, perk2) {
 
 export default class extends Tweeter {
 
-  static displayName = "DeadByDaylightBuild"
-
   static schema = joi.object().keys({
     perksType: joi.string(),
     cron: joi.string(),

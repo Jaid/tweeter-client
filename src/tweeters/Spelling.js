@@ -5,8 +5,6 @@ import Reaction from "src/tweeters/Reaction"
 
 export default class Spelling extends Reaction {
 
-  static displayName = "Spelling"
-
     static schema = joi.object().keys({
       ...Reaction.baseSchema,
     })

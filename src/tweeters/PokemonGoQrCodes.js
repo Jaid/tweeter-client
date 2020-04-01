@@ -14,8 +14,6 @@ import Reaction from "src/tweeters/Reaction"
 
 export default class extends Reaction {
 
-  static displayName = "PokemonGoQrCodes"
-
   static schema = joi.object().keys({
     ...Reaction.baseSchema,
   })
