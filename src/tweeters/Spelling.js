@@ -26,11 +26,6 @@ export default class Spelling extends Reaction {
     }
 
     async shouldHandleTweet(tweet) {
-      if (this.checkQuotesRegex.test(tweet.flattenedText)) {
-        this.logger.debug("Found quotes, skipping (assuming author is not dumb)")
-        await this.like(tweet)
-        return false
-      }
       if (this.checkLeadingLettersRegex.test(tweet.flattenedText)) {
         this.logger.debug("Found leading letters, skipping (assuming false positive)")
         return false
@@ -40,6 +35,15 @@ export default class Spelling extends Reaction {
         return false
       }
       return true
+    }
+
+    async handleTweet(tweet) {
+      await this.like(tweet)
+      if (this.checkQuotesRegex.test(tweet.flattenedText)) {
+        this.logger.debug(`Will not make a tweet assuming author @${tweet.user.screen_name} is not dumb`)
+        return
+      }
+      await super.handleTweet(tweet)
     }
 
 }
