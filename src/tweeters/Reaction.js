@@ -8,18 +8,22 @@ import Twit from "twit"
 import extendTweet from "lib/extendTweet"
 import Tweeter from "lib/Tweeter"
 
-export default class extends Tweeter {
+import main from "src/plugins/main"
+
+export default class Reaction extends Tweeter {
 
     static baseSchema = {
       reaction: joi.any(),
       includeReplies: joi.boolean().default(true),
+      ignoreSiblings: joi.boolean().default(true),
       track: joi.any(),
       language: joi.any(),
       filter: joi.any(),
       text: joi.string(),
-      likeMentions: joi.bool(),
       testTweet: joi.string(),
     }
+
+    static schema = Reaction.baseSchema
 
     /**
      * @type {import("twit")}
@@ -45,14 +49,6 @@ export default class extends Tweeter {
       }
       const stream = this.twit.stream("statuses/filter", streamOptions)
       stream.on("tweet", this.onTweet.bind(this))
-      if (this.options.likeMentions) {
-        const track = `@${this.handle.toLowerCase()}`
-        this.mentionsStream = this.twit.stream("statuses/filter", {track})
-        this.mentionsStream.on("tweet", tweet => {
-          extendTweet(tweet)
-          this.like(tweet)
-        })
-      }
       if (this.options.testTweet) {
         // Reference: https://developer.twitter.com/en/docs/tweets/post-and-engage/api-reference/get-statuses-show-id
         const {data: tweet} = await this.twit.get("statuses/show", {
@@ -66,12 +62,20 @@ export default class extends Tweeter {
       }
     }
 
+    /**
+     * @param {Object} tweet
+     * @return {Promise<void>}
+     */
     async onTweet(tweet) {
-      if (tweet.user.screen_name.toLowerCase() === this.handle.toLowerCase()) {
+      if (tweet.retweeted_status) {
+        return
+      }
+      if (this.user.id === tweet.user.id_str) {
         // https://i.imgur.com/ztyjOQa.png
         return
       }
-      if (tweet.retweeted_status) {
+      if (this.options.ignoreSiblings && main.getUserById(tweet.user.id_str)) {
+        // Don't react on siblings' tweets go avoid recursion
         return
       }
       extendTweet(tweet)

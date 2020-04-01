@@ -1,9 +1,9 @@
-import camelcase from "camelcase"
 import ensureArray from "ensure-array"
 import {isEmpty} from "has-content"
 import {JaidCorePlugin} from "jaid-core"
 
 import Tweeter from "lib/Tweeter"
+import tweeterTypes from "lib/tweeterTypes"
 
 class Main extends JaidCorePlugin {
 
@@ -12,23 +12,24 @@ class Main extends JaidCorePlugin {
    */
   tweeters = []
 
-  tweeterTypes = {}
+  credentials = null
 
   setCoreReference(core) {
     this.core = core
   }
 
-  async init() {
-    const requireContext = require.context("../../tweeters/", false)
-    for (const entry of requireContext.keys()) {
-      const name = entry.match(/\.\/(?<key>\w+)/).groups.key
-      const camelcaseName = camelcase(name)
-      this.tweeterTypes[camelcaseName] = {
-        Type: require(`../../tweeters/${name}.js`).default,
-      }
-    }
+  getUserByHandle(handle) {
+    return this.credentials.users.find(user => user.handle.toLowerCase() === handle.toLowerCase())
+  }
 
+  getUserById(id) {
+    return this.credentials.users.find(user => user.id === id)
+  }
+
+  async init() {
     Tweeter.initStatic()
+
+    this.credentials = await Tweeter.apiGot("credentials").json()
 
     const configuredTweeters = ensureArray(this.core.config.tweeters)
 
@@ -38,7 +39,7 @@ class Main extends JaidCorePlugin {
     }
 
     for (const {type, handle, dry, ...options} of configuredTweeters) {
-      const tweeterType = this.tweeterTypes[type]
+      const tweeterType = tweeterTypes[type]
       if (!tweeterType) {
         this.logger.warn(`Unknown tweeter type ${type}`)
         return
@@ -56,8 +57,11 @@ class Main extends JaidCorePlugin {
       }
       const tweeter = new Type(handle, dry, this.logger, finalOptions)
       if (!handle) {
-        this.log(`Tweeter #${tweeter.index} does not have a handle`)
-        return
+        throw new Error(`Tweeter #${tweeter.index} does not have a handle`)
+      }
+      tweeter.user = this.getUserByHandle(handle)
+      if (!tweeter.user) {
+        throw new Error(`Did not receive info for handle ${handle} from server`)
       }
       this.tweeters.push(tweeter)
       this.log("Registered tweeter #%s (%s) for @%s", tweeter.index, Type.displayName, handle)
