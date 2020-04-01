@@ -57,7 +57,7 @@ export default class extends Reaction {
 
   async handleTweet(tweet) {
     if (this.options.like) {
-      await this.like(tweet)
+      this.likeDelayed(tweet)
     }
     await this.retweet(tweet)
   }

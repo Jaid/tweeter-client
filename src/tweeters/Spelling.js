@@ -1,4 +1,6 @@
 import joi from "@hapi/joi"
+import {random} from "lodash"
+import ms from "ms.macro"
 import regexParser from "regex-parser"
 
 import Reaction from "src/tweeters/Reaction"
@@ -32,7 +34,7 @@ export default class Spelling extends Reaction {
 
     async handleTweet(tweet) {
       if (this.options.like) {
-        await this.like(tweet)
+        this.likeDelayed(tweet)
       }
       if (this.checkQuotesRegex.test(tweet.flattenedText)) {
         this.logger.debug(`Will not make a tweet assuming author @${tweet.user.screen_name} is not dumb`)

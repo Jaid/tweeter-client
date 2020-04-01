@@ -76,7 +76,7 @@ export default class extends Reaction {
 
   async handleTweet(tweet) {
     if (this.options.like) {
-      await this.like(tweet)
+      this.likeDelayed(tweet)
     }
     if (tweet.hasQrCode) {
       await this.retweet(tweet)

@@ -14,7 +14,7 @@ export default class LikeMentions extends Reaction {
   }
 
   async handleTweet(tweet) {
-    this.like(tweet)
+    this.likeDelayed(tweet)
   }
 
 }

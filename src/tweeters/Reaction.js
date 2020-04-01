@@ -2,7 +2,8 @@ import joi from "@hapi/joi"
 import ensureArray from "ensure-array"
 import ensureObject from "ensure-object"
 import handlebars from "handlebars"
-import {pick} from "lodash"
+import {pick, random} from "lodash"
+import ms from "ms.macro"
 import regexParser from "regex-parser"
 import Twit from "twit"
 
@@ -137,6 +138,9 @@ export default class Reaction extends Tweeter {
       if (this.options.reaction === "like") {
         await this.like(tweet)
       }
+      if (this.options.reaction === "likeDelayed") {
+        this.likeDelayed(tweet)
+      }
       if (this.options.reaction === "reply") {
         const text = this.template(templateContext)
         await this.reply(tweet, text)
@@ -151,6 +155,13 @@ export default class Reaction extends Tweeter {
       await this.twit.post("favorites/create", {
         id: tweet.id_str,
       })
+    }
+
+    likeDelayed(tweet) {
+      const tweeter = this
+      setTimeout(() => {
+        tweeter.like(tweet)
+      }, random(ms`5 seconds`, ms`2 minutes`))
     }
 
     async reply(tweet, text) {
