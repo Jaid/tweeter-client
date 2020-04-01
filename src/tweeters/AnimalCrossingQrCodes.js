@@ -12,6 +12,7 @@ export default class extends Reaction {
 
   static schema = joi.object().keys({
     ...Reaction.baseSchema,
+    like: joi.bool().default(true),
   })
 
   // Working QR code:
@@ -55,6 +56,9 @@ export default class extends Reaction {
   }
 
   async handleTweet(tweet) {
+    if (this.options.like) {
+      await this.like(tweet)
+    }
     await this.retweet(tweet)
   }
 
