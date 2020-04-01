@@ -2,6 +2,7 @@ import joi from "@hapi/joi"
 import ensureArray from "ensure-array"
 import ensureObject from "ensure-object"
 import handlebars from "handlebars"
+import {pick} from "lodash"
 import regexParser from "regex-parser"
 import Twit from "twit"
 
@@ -34,12 +35,10 @@ export default class Reaction extends Tweeter {
       if (this.options.text) {
         this.template = handlebars.compile(this.options.text, {noEscape: true})
       }
-      const twitCredentials = await Tweeter.apiGot("credentials", {
-        json: {
-          handle: this.handle,
-        },
-      }).json()
-      this.twit = new Twit(twitCredentials)
+      this.twit = new Twit({
+        ...main.credentials.appCredentials,
+        ...pick(this.user, ["access_token", "access_token_secret"]),
+      })
       const streamOptions = {}
       if (this.options.track) {
         streamOptions.track = this.options.track
