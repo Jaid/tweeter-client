@@ -14,17 +14,19 @@ import main from "src/plugins/main"
 export default class Reaction extends Tweeter {
 
     static baseSchema = {
-      reaction: joi.any(),
       includeReplies: joi.boolean().default(true),
       ignoreSiblings: joi.boolean().default(true),
-      track: joi.any(),
       language: joi.any(),
       filter: joi.any(),
-      text: joi.string(),
       testTweet: joi.string(),
     }
 
-    static schema = Reaction.baseSchema
+    static schema = {
+      ...Reaction.baseSchema,
+      text: joi.string(),
+      reaction: joi.any(),
+      track: joi.any(),
+    }
 
     /**
      * @type {import("twit")}
@@ -114,10 +116,31 @@ export default class Reaction extends Tweeter {
     }
 
     async handleTweet(tweet) {
+      if (!this.options.reaction) {
+        return
+      }
       const templateContext = {
         tweet,
       }
-      await this.reactToTweet(tweet, templateContext)
+      if (this.options.reaction === "tweet" && this.template) {
+        const text = this.template(templateContext)
+        await this.post(text)
+      }
+      if (this.options.reaction === "retweet") {
+        if (this.template) {
+          const text = this.template(templateContext)
+          await this.retweet(tweet, text)
+        } else {
+          await this.retweet(tweet)
+        }
+      }
+      if (this.options.reaction === "like") {
+        await this.like(tweet)
+      }
+      if (this.options.reaction === "reply") {
+        const text = this.template(templateContext)
+        await this.reply(tweet, text)
+      }
     }
 
     async like(tweet) {
@@ -141,37 +164,15 @@ export default class Reaction extends Tweeter {
       })
     }
 
-    async retweet(tweet) {
+    async retweet(tweet, comment) {
       if (this.dry) {
         this.logger.info(`Retweet ${tweet.shortLink}`)
         return
       }
+      if (this.comment) {
+        await this.post(`${comment}\n${tweet.link}`)
+      }
       await this.twit.post(`statuses/retweet/${tweet.id_str}`)
-    }
-
-    async reactToTweet(tweet, templateContext) {
-      if (!this.options.reaction) {
-        return
-      }
-      if (this.options.reaction === "tweet" && this.template) {
-        const text = this.template(templateContext)
-        await this.post(text)
-      }
-      if (this.options.reaction === "retweet") {
-        if (this.template) {
-          const text = this.template(templateContext)
-          await this.post(`${text}\n${tweet.link}`)
-        } else {
-          await this.retweet(tweet)
-        }
-      }
-      if (this.options.reaction === "like") {
-        await this.like(tweet)
-      }
-      if (this.options.reaction === "reply") {
-        const text = this.template(templateContext)
-        await this.reply(tweet, text)
-      }
     }
 
 }

@@ -1,4 +1,5 @@
 import joi from "@hapi/joi"
+import {omit} from "lodash"
 import regexParser from "regex-parser"
 
 import Reaction from "src/tweeters/Reaction"
@@ -6,19 +7,11 @@ import Reaction from "src/tweeters/Reaction"
 export default class Spelling extends Reaction {
 
     static schema = joi.object().keys({
-      ...Reaction.baseSchema,
+      ...omit(Reaction.schema, "reaction"),
       like: joi.bool().default(true),
     })
 
-    /**
-     * @type {import("twit")}
-     */
-    twit = null
-
     async start() {
-      if (!this.options.reaction) {
-        this.options.reaction = "retweet"
-      }
       await super.start()
       this.checkQuotesRegex = regexParser(`/["„“'‚‘]${this.options.track}["„“'‚‘]/i`)
       this.checkLeadingLettersRegex = regexParser(`/\\w${this.options.track}/i`)
@@ -45,7 +38,11 @@ export default class Spelling extends Reaction {
         this.logger.debug(`Will not make a tweet assuming author @${tweet.user.screen_name} is not dumb`)
         return
       }
-      await super.handleTweet(tweet)
+      const templateContext = {
+        tweet,
+      }
+      const text = this.template(templateContext)
+      await this.retweet(tweet, text)
     }
 
 }

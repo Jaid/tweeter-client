@@ -6,7 +6,7 @@ import Reaction from "src/tweeters/Reaction"
 export default class AnswerMentions extends Reaction {
 
   static schema = joi.object().keys({
-    ...omit(Reaction.baseSchema, "track"),
+    ...omit(Reaction.schema, "track"),
   })
 
   async start() {

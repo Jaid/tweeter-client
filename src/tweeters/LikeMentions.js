@@ -1,12 +1,11 @@
 import joi from "@hapi/joi"
-import {omit} from "lodash"
 
 import Reaction from "src/tweeters/Reaction"
 
 export default class LikeMentions extends Reaction {
 
   static schema = joi.object().keys({
-    ...omit(Reaction.baseSchema, ["track", "reaction", "text"]),
+    ...Reaction.baseSchema,
   })
 
   async start() {

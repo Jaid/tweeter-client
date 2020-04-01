@@ -25,13 +25,6 @@ export default class extends Reaction {
   // Tweet with multiple codes:
   // https://twitter.com/KatibimSerdal/status/1245279187507843073
 
-  async start() {
-    if (!this.options.reaction) {
-      this.options.reaction = "retweet"
-    }
-    await super.start()
-  }
-
   async shouldHandleTweet(tweet) {
     const codes = []
     if (hasContent(tweet.extended_entities?.media)) {
@@ -85,7 +78,7 @@ export default class extends Reaction {
       await this.like(tweet)
     }
     if (tweet.hasQrCode) {
-      await super.handleTweet(tweet)
+      await this.retweet(tweet)
       return
     }
     const text = this.template({
