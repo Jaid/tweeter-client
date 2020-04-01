@@ -1,9 +1,9 @@
+import camelcase from "camelcase"
 import ensureArray from "ensure-array"
 import {isEmpty} from "has-content"
 import {JaidCorePlugin} from "jaid-core"
 
 import Tweeter from "lib/Tweeter"
-import tweeterTypes from "lib/tweeterTypes"
 
 class Main extends JaidCorePlugin {
 
@@ -12,11 +12,22 @@ class Main extends JaidCorePlugin {
    */
   tweeters = []
 
+  tweeterTypes = {}
+
   setCoreReference(core) {
     this.core = core
   }
 
   async init() {
+    const requireContext = require.context("../../tweeters/", false)
+    for (const entry of requireContext.keys()) {
+      const name = entry.match(/\.\/(?<key>\w+)/).groups.key
+      const camelcaseName = camelcase(name)
+      this.tweeterTypes[camelcaseName] = {
+        Type: require(`../../tweeters/${name}.js`).default,
+      }
+    }
+
     Tweeter.initStatic()
 
     const configuredTweeters = ensureArray(this.core.config.tweeters)
@@ -27,7 +38,7 @@ class Main extends JaidCorePlugin {
     }
 
     for (const {type, handle, dry, ...options} of configuredTweeters) {
-      const tweeterType = tweeterTypes[type]
+      const tweeterType = this.tweeterTypes[type]
       if (!tweeterType) {
         this.logger.warn(`Unknown tweeter type ${type}`)
         return
