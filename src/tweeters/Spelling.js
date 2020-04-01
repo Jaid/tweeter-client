@@ -17,7 +17,6 @@ export default class Spelling extends Reaction {
 
     async start() {
       if (!this.options.reaction) {
-        this.logger.warn("Option reaction not given, will default to retweet")
         this.options.reaction = "retweet"
       }
       await super.start()

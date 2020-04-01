@@ -20,6 +20,12 @@ export default class extends Reaction {
   // Randomly found empty QR code:
   // https://twitter.com/Wolfenpilot687/status/1243942699855577090
 
+  async start() {
+    if (!this.options.reaction) {
+      this.options.reaction = "retweet"
+    }
+  }
+
   async shouldHandleTweet(tweet) {
     if (isEmpty(tweet.extended_entities?.media)) {
       return false
