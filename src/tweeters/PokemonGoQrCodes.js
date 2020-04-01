@@ -17,6 +17,7 @@ export default class extends Reaction {
   static schema = joi.object().keys({
     ...Reaction.baseSchema,
     like: joi.bool().default(true),
+    text: joi.string().required(),
   })
 
   // Working QR code:
