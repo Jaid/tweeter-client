@@ -6,7 +6,7 @@ const requireContext = require.context("../tweeters/", false)
 for (const entry of requireContext.keys()) {
   const name = entry.match(/\.\/(?<key>\w+)/).groups.key
   const camelcaseName = camelcase(name)
-  this.tweeterTypes[camelcaseName] = {
+  types[camelcaseName] = {
     Type: require(`../tweeters/${name}.js`).default,
   }
 }
