@@ -1,4 +1,5 @@
 import joi from "@hapi/joi"
+import delay from "delay"
 import ensureArray from "ensure-array"
 import ensureObject from "ensure-object"
 import handlebars from "handlebars"
@@ -8,6 +9,7 @@ import regexParser from "regex-parser"
 import Twit from "twit"
 
 import extendTweet from "lib/extendTweet"
+import parseTime from "lib/parseTime"
 import Tweeter from "lib/Tweeter"
 
 import main from "src/plugins/main"
@@ -21,6 +23,7 @@ export default class Reaction extends Tweeter {
       filter: joi.any(),
       testTweet: joi.string(),
       track: joi.any(),
+      timeBetweenActions: joi.number(),
     }
 
     static schema = {
@@ -49,8 +52,8 @@ export default class Reaction extends Tweeter {
       if (this.options.language) {
         streamOptions.language = this.options.language
       }
-      const stream = this.twit.stream("statuses/filter", streamOptions)
-      stream.on("tweet", this.onTweet.bind(this))
+      this.stream = this.twit.stream("statuses/filter", streamOptions)
+      this.stream.on("tweet", this.onTweet.bind(this))
       if (this.options.testTweet) {
         // Reference: https://developer.twitter.com/en/docs/tweets/post-and-engage/api-reference/get-statuses-show-id
         const {data: tweet} = await this.twit.get("statuses/show", {
@@ -62,6 +65,16 @@ export default class Reaction extends Tweeter {
         this.logger.info(`${"Testing tweet: twitter.com/"}${tweet.user.screen_name}/status/${tweet.id_str}`)
         await this.onTweet(tweet)
       }
+    }
+
+    /**
+     * @param {number} pauseMs
+     * @return {Promise<void>}
+     */
+    async pauseStream(pauseMs) {
+      this.stream.stop()
+      await delay(pauseMs)
+      this.stream.start()
     }
 
     /**
@@ -114,6 +127,10 @@ export default class Reaction extends Tweeter {
         }
       }
       await this.handleTweet(tweet)
+      if (this.options.timeBetweenActions) {
+        const pauseMs = parseTime(this.options.timeBetweenActions)
+        this.pauseStream(pauseMs)
+      }
     }
 
     async handleTweet(tweet) {
