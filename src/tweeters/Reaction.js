@@ -169,8 +169,9 @@ export default class Reaction extends Tweeter {
         this.logger.info(`Retweet ${tweet.shortLink}`)
         return
       }
-      if (this.comment) {
+      if (comment) {
         await this.post(`${comment}\n${tweet.link}`)
+        return
       }
       await this.twit.post(`statuses/retweet/${tweet.id_str}`)
     }
