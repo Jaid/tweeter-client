@@ -19,11 +19,11 @@ class Main extends JaidCorePlugin {
   }
 
   getUserByHandle(handle) {
-    return this.credentials.users.find(user => user.handle.toLowerCase() === handle.toLowerCase())
+    return this.credentials.users[handle.toLowerCase()]
   }
 
   getUserById(id) {
-    return this.credentials.users.find(user => user.id === id)
+    return Object.values(this.credentials.users).find(user => user.id === id)
   }
 
   async init() {
