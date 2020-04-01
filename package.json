@@ -13,6 +13,7 @@
     "ensure-array": "^1.0.0",
     "ensure-object": "^1.0.1",
     "escape-string-regexp": "^2.0.0",
+    "execall": "^2.0.0",
     "flatten-multiline": "^1.0.0",
     "got": "^10.7.0",
     "handlebars": "^4.7.3",

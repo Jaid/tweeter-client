@@ -1,8 +1,10 @@
 import joi from "@hapi/joi"
 import dataUrls from "data-urls"
+import execall from "execall"
 import got from "got"
 import hasContent, {isEmpty} from "has-content"
 import Jimp from "jimp"
+import {uniq} from "lodash"
 import qrcode from "qrcode"
 
 import getQrCodeFromBuffer from "lib/getQrCodeFromBuffer"
@@ -20,6 +22,9 @@ export default class extends Reaction {
 
   // Working QR code:
   // https://twitter.com/hachx0/status/1226303748844195840
+
+  // Tweet with multiple codes:
+  // https://twitter.com/KatibimSerdal/status/1245279187507843073
 
   async shouldHandleTweet(tweet) {
     const codes = []
@@ -41,18 +46,22 @@ export default class extends Reaction {
       }
     }
     if (!tweet.hasQrCode) {
-      const codeFromTextMatch = /(?<code>(?:\d{4}[ -]?){2}\d{4})/.exec(tweet.flattenedText)
-      if (codeFromTextMatch?.groups.code) {
-        const codeFromText = codeFromTextMatch.groups.code.replace(/[ -]/g, "")
-        this.logger.debug(`Extracted code: ${codeFromText}`)
+      // This pattern is better:
+      // /\D((?:\d{4}[ -]?){2}\d{4})(\D|$)/g
+      // But does not work with execall because matches would overlap
+      const regex = /((?:\d{4}[ -]?){2}\d{4})(\D|$)/g
+      const codeMatches = execall(regex, tweet.flattenedText)
+      console.dir(codeMatches)
+      for (const codeMatch of codeMatches) {
+        const codeFromText = codeMatch.subMatches[0].replace(/[ -]/g, "")
         codes.push(codeFromText)
       }
     }
     if (isEmpty(codes)) {
       return false
     }
-    tweet.codes = codes
-    tweet.codesFormatted = codes.map(code => {
+    tweet.codes = uniq(codes)
+    tweet.codesFormatted = tweet.codes.map(code => {
       return `${code.slice(0, 4)} ${code.slice(4, 8)} ${code.slice(8, 12)}`
     })
     tweet.codesString = tweet.codesFormatted.join("\n")
