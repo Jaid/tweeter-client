@@ -34,6 +34,8 @@ npm install --global @jaid/tweeter-client@^4.19.1
 
 
 
+## Example
+
 Tweet every time `tweeter-client` starts.
 
 ```yaml
@@ -41,6 +43,7 @@ tweeters:
 - type: test
   handle: jaidlive
 ```
+
 
 
 
