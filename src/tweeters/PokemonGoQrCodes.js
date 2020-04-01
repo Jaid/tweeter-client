@@ -57,7 +57,6 @@ export default class extends Reaction {
       // But does not work with execall because matches would overlap
       const regex = /((?:\d{4}[ -]?){2}\d{4})(\D|$)/g
       const codeMatches = execall(regex, tweet.flattenedText)
-      console.dir(codeMatches)
       for (const codeMatch of codeMatches) {
         const codeFromText = codeMatch.subMatches[0].replace(/[ -]/g, "")
         codes.push(codeFromText)
