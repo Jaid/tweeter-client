@@ -23,7 +23,7 @@ export default class Reaction extends Tweeter {
       filter: joi.any(),
       testTweet: joi.string(),
       track: joi.any(),
-      timeBetweenActions: joi.number(),
+      timeBetweenActions: [joi.string(), joi.number()],
     }
 
     static schema = {
