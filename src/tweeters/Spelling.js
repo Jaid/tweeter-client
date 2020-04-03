@@ -1,6 +1,4 @@
 import joi from "@hapi/joi"
-import {random} from "lodash"
-import ms from "ms.macro"
 import regexParser from "regex-parser"
 
 import Reaction from "src/tweeters/Reaction"
@@ -9,7 +7,7 @@ export default class Spelling extends Reaction {
 
     static schema = joi.object().keys({
       ...Reaction.baseSchema,
-      like: joi.bool().default(true),
+      like: joi.bool(),
       text: joi.string().required(),
     })
 
