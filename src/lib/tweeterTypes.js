@@ -1,14 +1,13 @@
 import camelcase from "camelcase"
 
-const types = {}
-
-const requireContext = require.context("../tweeters/", false)
-for (const entry of requireContext.keys()) {
-  const name = entry.match(/\.\/(?<key>\w+)/).groups.key
+const entries = {}
+const requireContext = require.context("../tweeters/", true, /^\.\/\w+\/index.js$/)
+for (const relativePath of requireContext.keys()) {
+  const name = relativePath.match(/[/\\](?<name>.+?)[/\\]index\.js$/).groups.name
   const camelcaseName = camelcase(name)
-  types[camelcaseName] = {
-    Type: require(`../tweeters/${name}.js`).default,
+  entries[camelcaseName] = {
+    Type: requireContext(relativePath).default,
   }
 }
 
-export default types
+export default entries
