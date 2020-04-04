@@ -6,6 +6,7 @@ for (const relativePath of requireContext.keys()) {
   const name = relativePath.match(/[/\\](?<name>.+?)[/\\]index\.js$/).groups.name
   const camelcaseName = camelcase(name)
   entries[camelcaseName] = {
+    id: camelcaseName,
     Type: requireContext(relativePath).default,
   }
 }

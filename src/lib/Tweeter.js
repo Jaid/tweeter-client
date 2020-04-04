@@ -1,5 +1,6 @@
 import ensureArray from "ensure-array"
 import flattenMultiline from "flatten-multiline"
+import path from "path"
 
 import {config} from "src/core"
 import main from "src/plugins/main"
@@ -17,10 +18,11 @@ export default class Tweeter {
      * @constructor
      * @param {string} handle
      */
-   constructor(handle, dry, logger, options) {
+   constructor(handle, dry, logger, tweeterType, options) {
      this.handle = handle
      this.dry = dry
      this.logger = logger
+     this.tweeterType = tweeterType
      this.index = currentIndex
      this.options = options
      currentIndex++
@@ -98,6 +100,10 @@ export default class Tweeter {
        include_ext_alt_text: true,
      })
      return response.data
+   }
+
+   getDataFolder() {
+     return path.join(main.core.appFolder, "data", this.user.handle.toLowerCase(), this.tweeterType)
    }
 
 }

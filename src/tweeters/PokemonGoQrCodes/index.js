@@ -28,6 +28,8 @@ export default class extends Reaction {
   // https://twitter.com/KatibimSerdal/status/1245279187507843073
 
   async shouldHandleTweet(tweet) {
+    const f = this.getDataFolder()
+    debugger
     const codes = []
     if (hasContent(tweet.extended_entities?.media)) {
       for (const mediaEntry of tweet.extended_entities.media) {
