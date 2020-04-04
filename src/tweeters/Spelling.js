@@ -1,6 +1,8 @@
 import joi from "@hapi/joi"
 import regexParser from "regex-parser"
 
+import extendTweet from "lib/extendTweet"
+
 import Reaction from "src/tweeters/Reaction"
 
 export default class Spelling extends Reaction {
@@ -34,6 +36,18 @@ export default class Spelling extends Reaction {
     async handleTweet(tweet) {
       if (this.options.like) {
         this.likeDelayed(tweet)
+      }
+      if (this.options.ignoreTypoReferences) {
+        if (tweet.in_reply_to_status_id_str) {
+          const parent = await this.getTweetById(tweet.in_reply_to_status_id_str)
+          extendTweet(parent)
+          const haystackLower = parent.fullText.toLowerCase()
+          const needleLower = this.options.track.toLowerCase()
+          if (haystackLower.includes(needleLower)) {
+            this.logger.debug(`Will not make a tweet assuming author @${tweet.user.screen_name} copied the typo from parent tweet`)
+            return
+          }
+        }
       }
       if (this.checkQuotesRegex.test(tweet.flattenedText)) {
         this.logger.debug(`Will not make a tweet assuming author @${tweet.user.screen_name} is not dumb`)

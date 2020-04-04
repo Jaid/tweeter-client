@@ -56,12 +56,7 @@ export default class Reaction extends Tweeter {
       this.stream.on("tweet", this.onTweet.bind(this))
       if (this.options.testTweet) {
         // Reference: https://developer.twitter.com/en/docs/tweets/post-and-engage/api-reference/get-statuses-show-id
-        const {data: tweet} = await this.twit.get("statuses/show", {
-          id: this.options.testTweet,
-          include_entities: true,
-          trim_user: false,
-          include_ext_alt_text: true,
-        })
+        const tweet = await this.getTweetById(this.options.testTweet)
         this.logger.info(`${"Testing tweet: twitter.com/"}${tweet.user.screen_name}/status/${tweet.id_str}`)
         await this.onTweet(tweet)
       }

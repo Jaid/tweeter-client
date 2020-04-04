@@ -86,4 +86,18 @@ export default class Tweeter {
      await this.post("", media)
    }
 
+   /**
+    * @param {string} tweetId
+    * @return {Promise<Object>}
+    */
+   async getTweetById(tweetId) {
+     const response = await this.twit.get("statuses/show", {
+       id: tweetId,
+       include_entities: true,
+       trim_user: false,
+       include_ext_alt_text: true,
+     })
+     return response.data
+   }
+
 }
