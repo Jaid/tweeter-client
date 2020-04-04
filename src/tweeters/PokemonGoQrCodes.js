@@ -17,6 +17,7 @@ export default class extends Reaction {
   static schema = joi.object().keys({
     ...Reaction.baseSchema,
     like: joi.bool(),
+    ignoreWithoutLocation: joi.bool(),
     text: joi.string().required(),
   })
 
@@ -70,6 +71,10 @@ export default class extends Reaction {
       } else {
         this.logger.debug(`Discarding Twitter user location: ${tweet.user.location}`)
       }
+    }
+    if (this.options.ignoreWithoutLocation && !tweet.playerLocation) {
+      this.logger.debug("Ignoring tweet, because author does not have a meaningful location set")
+      return false
     }
     return true
   }
