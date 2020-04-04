@@ -9,6 +9,7 @@ export default class Spelling extends Reaction {
       ...Reaction.baseSchema,
       like: joi.bool(),
       text: joi.string().required(),
+      ignoreTypoReferences: joi.bool().default(true),
     })
 
     async start() {
