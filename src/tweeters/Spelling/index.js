@@ -12,7 +12,7 @@ export default class Spelling extends ReactionWithCooldown {
       like: joi.bool(),
       text: joi.string().required(),
       ignoreTypoReferences: joi.bool().default(true),
-      maximumCorrectionsPerUser: joi.number.default(3),
+      maximumCorrectionsPerUser: joi.number().default(3),
     })
 
     async start() {
