@@ -75,10 +75,12 @@ export default class Spelling extends ReactionWithCooldown {
       }
       const text = this.template(templateContext)
       const result = await this.retweet(tweet, text)
-      await this.registerTargetActionFromTweet(tweet, {
-        myTweetId: result.tweet.id_str,
-        originalTweetId: tweet.id_str,
-      })
+      if (result?.tweet) {
+        await this.registerTargetActionFromTweet(tweet, {
+          myTweetId: result.tweet.id_str,
+          originalTweetId: tweet.id_str,
+        })
+      }
     }
 
 }
