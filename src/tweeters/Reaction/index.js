@@ -193,8 +193,8 @@ export default class Reaction extends Tweeter {
         return
       }
       if (comment) {
-        await this.post(`${comment}\n${tweet.link}`)
-        return
+        const result = await this.post(`${comment}\n${tweet.link}`)
+        return result
       }
       await this.twit.post(`statuses/retweet/${tweet.id_str}`)
     }

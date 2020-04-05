@@ -3,15 +3,16 @@ import regexParser from "regex-parser"
 
 import extendTweet from "lib/extendTweet"
 
-import Reaction from "src/tweeters/Reaction"
+import ReactionWithCooldown from "src/tweeters/ReactionWithCooldown"
 
-export default class Spelling extends Reaction {
+export default class Spelling extends ReactionWithCooldown {
 
     static schema = joi.object().keys({
-      ...Reaction.baseSchema,
+      ...ReactionWithCooldown.baseSchema,
       like: joi.bool(),
       text: joi.string().required(),
       ignoreTypoReferences: joi.bool().default(true),
+      maximumCorrectionsPerUser: joi.number.default(3),
     })
 
     async start() {
@@ -28,6 +29,10 @@ export default class Spelling extends Reaction {
       }
       if (this.checkTrailingLettersRegex.test(tweet.flattenedText)) {
         this.logger.debug("Found trailing letters, skipping  (assuming false positive)")
+        return false
+      }
+      const shouldHandleTweetSuper = await super.shouldHandleTweet(tweet)
+      if (!shouldHandleTweetSuper) {
         return false
       }
       return true
@@ -53,11 +58,27 @@ export default class Spelling extends Reaction {
         this.logger.debug(`Will not make a tweet assuming author @${tweet.user.screen_name} is not dumb`)
         return
       }
+      const previousCountForThisUser = await ReactionWithCooldown.TargetAction.count({
+        where: {
+          targetUserId: tweet.user.id_str,
+        },
+      })
+      if (this.options.maximumCorrectionsPerUser) {
+        if (previousCountForThisUser >= this.options.maximumCorrectionsPerUser) {
+          this.logger.debug(`Not correcting @${tweet.user.screen_name}, because user has already been corrected ${previousCountForThisUser} times`)
+          return
+        }
+      }
       const templateContext = {
         tweet,
+        previousCountForThisUser,
       }
       const text = this.template(templateContext)
-      await this.retweet(tweet, text)
+      const result = await this.retweet(tweet, text)
+      await this.registerTargetActionFromTweet(tweet, {
+        myTweetId: result.tweet.id_str,
+        originalTweetId: tweet.id_str,
+      })
     }
 
 }

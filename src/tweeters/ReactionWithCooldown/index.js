@@ -9,6 +9,8 @@ import TargetAction from "./TargetAction"
 
 export default class ReactionWithCooldown extends Reaction {
 
+  static TargetAction = TargetAction
+
   static models = {
     TargetAction: require("./TargetAction"),
   }
