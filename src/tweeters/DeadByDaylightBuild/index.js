@@ -1,7 +1,6 @@
 import fsp from "@absolunet/fsp"
 import joi from "@hapi/joi"
 import deadByDaylight from "dead-by-daylight"
-import handlebars from "handlebars"
 import humanizeList from "humanize-list"
 import Jimp from "jimp"
 import schedule from "node-schedule"
@@ -9,6 +8,7 @@ import pickRandom from "pick-random"
 import renderDeadByDaylightBuild from "render-dead-by-daylight-build"
 
 import collator from "lib/collator"
+import handlebars from "lib/handlebars"
 import Tweeter from "lib/Tweeter"
 
 /**
