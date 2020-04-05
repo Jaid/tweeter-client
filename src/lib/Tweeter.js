@@ -1,6 +1,9 @@
+import fsp from "@absolunet/fsp"
 import ensureArray from "ensure-array"
 import flattenMultiline from "flatten-multiline"
 import path from "path"
+import Sequelize from "sequelize"
+import sortKeys from "sort-keys"
 
 import {config} from "src/core"
 import main from "src/plugins/main"
@@ -77,8 +80,9 @@ export default class Tweeter {
            media,
            handle: this.handle,
          },
-       })
+       }).json()
        this.logger.debug("Tweet result: [%s %s] %s", result.statusCode, result.statusMessage, result.body)
+       return result
      } catch (error) {
        this.logger.error("[Tweeter #%s] Could not send tweet: %s", this.index, error)
      }
@@ -104,6 +108,25 @@ export default class Tweeter {
 
    getDataFolder() {
      return path.join(main.core.appFolder, "data", this.user.handle.toLowerCase(), this.tweeterType)
+   }
+
+   async initDatabase(modelMap) {
+     const dataFolder = this.getDataFolder()
+     await fsp.ensureDir(dataFolder)
+     const databaseFile = path.join(dataFolder, "database.sqlite")
+     this.database = new Sequelize({
+       dialect: "sqlite",
+       storage: databaseFile,
+     })
+     for (const [modelName, modelDefinition] of Object.entries(modelMap)) {
+       const schema = sortKeys(modelDefinition.schema)
+       modelDefinition.default.init(schema, {
+         modelName,
+         sequelize: this.database,
+         ...modelDefinition.modelOptions,
+       })
+     }
+     await this.database.sync()
    }
 
 }

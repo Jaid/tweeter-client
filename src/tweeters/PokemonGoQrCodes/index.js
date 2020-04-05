@@ -10,12 +10,12 @@ import qrcode from "qrcode"
 import getQrCodeFromBuffer from "lib/getQrCodeFromBuffer"
 import isOnlyLetters from "lib/isOnlyLetters"
 
-import Reaction from "src/tweeters/Reaction"
+import ReactionWithCooldown from "src/tweeters/ReactionWithCooldown"
 
-export default class extends Reaction {
+export default class extends ReactionWithCooldown {
 
   static schema = joi.object().keys({
-    ...Reaction.baseSchema,
+    ...ReactionWithCooldown.baseSchema,
     like: joi.bool(),
     ignoreWithoutLocation: joi.bool(),
     text: joi.string().required(),
@@ -28,8 +28,10 @@ export default class extends Reaction {
   // https://twitter.com/KatibimSerdal/status/1245279187507843073
 
   async shouldHandleTweet(tweet) {
-    const f = this.getDataFolder()
-    debugger
+    const shouldHandleTweetSuper = await super.shouldHandleTweet(tweet)
+    if (!shouldHandleTweetSuper) {
+      return false
+    }
     const codes = []
     if (hasContent(tweet.extended_entities?.media)) {
       for (const mediaEntry of tweet.extended_entities.media) {
@@ -104,7 +106,12 @@ export default class extends Reaction {
       return qrJimp.getBase64Async(Jimp.MIME_PNG)
     })
     const qrCodeImages = await Promise.all(renderJobs)
-    await this.post(`${text}\n${tweet.link}`, qrCodeImages)
+    const result = await this.post(`${text}\n${tweet.link}`, qrCodeImages)
+    await this.registerTargetActionFromTweet(tweet, {
+      myTweetId: result.tweet.id_str,
+      originalTweetId: tweet.id_str,
+      codes: tweet.codes,
+    })
   }
 
 }

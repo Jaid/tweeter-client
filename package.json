@@ -33,6 +33,8 @@
     "remove-accents": "^0.4.2",
     "render-dead-by-daylight-build": "^1.1.1",
     "sequelize": "^5.21.6",
+    "sort-keys": "^4.0.0",
+    "sqlite3": "^4.1.1",
     "steam-game-update-watcher": "^1.1.1",
     "timestring": "^6.0.0",
     "twit": "^2.2.11",
