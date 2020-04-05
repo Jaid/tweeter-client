@@ -28,10 +28,6 @@ export default class extends ReactionWithCooldown {
   // https://twitter.com/KatibimSerdal/status/1245279187507843073
 
   async shouldHandleTweet(tweet) {
-    const shouldHandleTweetSuper = await super.shouldHandleTweet(tweet)
-    if (!shouldHandleTweetSuper) {
-      return false
-    }
     const codes = []
     if (hasContent(tweet.extended_entities?.media)) {
       for (const mediaEntry of tweet.extended_entities.media) {
@@ -78,6 +74,10 @@ export default class extends ReactionWithCooldown {
     }
     if (this.options.ignoreWithoutLocation && !tweet.playerLocation) {
       this.logger.debug("Ignoring tweet, because author does not have a meaningful location set")
+      return false
+    }
+    const shouldHandleTweetSuper = await super.shouldHandleTweet(tweet)
+    if (!shouldHandleTweetSuper) {
       return false
     }
     return true
