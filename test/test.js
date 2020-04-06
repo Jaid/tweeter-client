@@ -7,6 +7,7 @@ import AnimalCrossingFormat from "lib/AnimalCrossingFormat"
 import getQrCodeFromBuffer from "lib/getQrCodeFromBuffer"
 import isLikelyDesign from "lib/isLikelyDesign"
 import renderDeadByDaylightBuild from "lib/renderDeadByDaylightBuild"
+import renderPokemonGoQrCode from "lib/renderPokemonGoQrCode"
 
 const imagesDirectory = path.join(__dirname, "images")
 
@@ -75,6 +76,18 @@ it("should render Dead by Daylight perk build", async () => {
   const backgroundBuffer = await fsp.readFile(backgroundFile)
   const buffer = await renderDeadByDaylightBuild(perkIds, backgroundBuffer)
   const file = path.resolve(__dirname, "..", "dist", "test", "deadByDaylightBuild.png")
+  await fsp.outputFile(file, buffer)
+  const jimpImage = await Jimp.read(buffer)
+  expect(jimpImage.getWidth()).toBe(1920)
+  expect(jimpImage.getHeight()).toBe(1080)
+}, ms`2 minutes`)
+
+it("should render Pokemon Go QR code", async () => {
+  const code = "553346451999"
+  const backgroundFile = path.join(imagesDirectory, "pokemonGoQrCodeBackground.png")
+  const backgroundBuffer = await fsp.readFile(backgroundFile)
+  const buffer = await renderPokemonGoQrCode(code, backgroundBuffer, 0xABFF66FF)
+  const file = path.resolve(__dirname, "..", "dist", "test", "pokemonGoQrCode.png")
   await fsp.outputFile(file, buffer)
   const jimpImage = await Jimp.read(buffer)
   expect(jimpImage.getWidth()).toBe(1920)

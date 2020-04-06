@@ -1,16 +1,17 @@
 import joi from "@hapi/joi"
-import dataUrls from "data-urls"
+import bufferToDataUrl from "buffer-to-data-url"
 import execall from "execall"
 import got from "got"
 import hasContent, {isEmpty} from "has-content"
-import Jimp from "jimp"
 import {uniq} from "lodash"
-import qrcode from "qrcode"
 
 import getQrCodeFromBuffer from "lib/getQrCodeFromBuffer"
 import isOnlyLetters from "lib/isOnlyLetters"
+import renderPokemonGoQrCode from "lib/renderPokemonGoQrCode"
 
 import ReactionWithCooldown from "src/tweeters/ReactionWithCooldown"
+
+import backgroundBuffer from "./background.png"
 
 export default class extends ReactionWithCooldown {
 
@@ -95,15 +96,9 @@ export default class extends ReactionWithCooldown {
       tweet,
     })
     const renderJobs = tweet.codes.map(async code => {
-      const qrUrl = await qrcode.toDataURL(code, {
-        errorCorrectionLevel: "L",
-        scale: 32,
-      })
-      const qrBuffer = dataUrls(qrUrl).body
-      const qrJimp = await Jimp.create(qrBuffer)
-      qrJimp.background(0xFFFFFFFF)
-      qrJimp.contain(1920, 1080)
-      return qrJimp.getBase64Async(Jimp.MIME_PNG)
+      const renderedBuffer = await renderPokemonGoQrCode(code)
+      const renderedDataUrl = bufferToDataUrl(renderedBuffer, backgroundBuffer)
+      return renderedDataUrl
     })
     const qrCodeImages = await Promise.all(renderJobs)
     const result = await this.post(`${text}\n${tweet.link}`, qrCodeImages)
