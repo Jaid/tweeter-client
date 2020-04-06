@@ -58,7 +58,7 @@ export default class Spelling extends ReactionWithCooldown {
         this.logger.debug(`Will not make a tweet assuming author @${tweet.user.screen_name} is not dumb`)
         return
       }
-      const previousCountForThisUser = await ReactionWithCooldown.TargetAction.count({
+      const previousCountForThisUser = await this.database.models.TargetAction.count({
         where: {
           targetUserId: tweet.user.id_str,
         },

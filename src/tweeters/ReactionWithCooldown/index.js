@@ -1,18 +1,39 @@
 import joi from "@hapi/joi"
-import {Op} from "sequelize"
+import Sequelize, {Op} from "sequelize"
 
 import parseTime from "lib/parseTime"
 
 import Reaction from "src/tweeters/Reaction"
 
-import TargetAction from "./TargetAction"
-
 export default class ReactionWithCooldown extends Reaction {
 
-  static TargetAction = TargetAction
+  static createTargetActionModel = () => {
+    class TargetAction extends Sequelize.Model {}
 
-  static models = {
-    TargetAction: require("./TargetAction"),
+    /**
+     * @type {import("sequelize").ModelAttributes}
+     */
+    const schema = {
+      targetUserId: {
+        type: Sequelize.STRING(64),
+        allowNull: false,
+      },
+      targetUserHandle: Sequelize.STRING(64),
+      payload: Sequelize.JSON,
+    }
+
+    /**
+     * @type {import("sequelize").ModelOptions}
+     */
+    const modelOptions = {
+      updatedAt: false,
+    }
+
+    return {
+      default: TargetAction,
+      schema,
+      modelOptions,
+    }
   }
 
   static baseSchema = {
@@ -20,9 +41,13 @@ export default class ReactionWithCooldown extends Reaction {
     userCooldown: joi.string().default("1h"),
   }
 
-  async start() {
+  async start(models) {
     await super.start()
-    await this.initDatabase(ReactionWithCooldown.models)
+    this.TargetAction = ReactionWithCooldown.createTargetActionModel()
+    await this.initDatabase({
+      TargetAction: this.TargetAction,
+      ...models,
+    })
   }
 
   /**
@@ -31,7 +56,7 @@ export default class ReactionWithCooldown extends Reaction {
    * @return {Promise<void>}
    */
   async registerTargetActionFromId(userId, payload) {
-    await TargetAction.create({
+    await this.database.models.TargetAction.create({
       targetUserId: userId,
       payload,
     })
@@ -43,7 +68,7 @@ export default class ReactionWithCooldown extends Reaction {
    * @return {Promise<void>}
    */
   async registerTargetActionFromTweet(tweet, payload) {
-    await TargetAction.create({
+    await this.database.models.TargetAction.create({
       targetUserId: tweet.user.id_str,
       targetUserHandle: tweet.user.screen_name,
       payload,
@@ -53,7 +78,7 @@ export default class ReactionWithCooldown extends Reaction {
   async shouldHandleTweet(tweet) {
     if (this.options.userCooldown) {
       const userCooldownMs = parseTime(this.options.userCooldown)
-      const previousTweetForUser = await TargetAction.findOne({
+      const previousTweetForUser = await this.database.models.TargetAction.findOne({
         where: {
           targetUserId: tweet.user.id_str,
           createdAt: {
