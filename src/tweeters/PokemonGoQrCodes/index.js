@@ -96,8 +96,8 @@ export default class extends ReactionWithCooldown {
       tweet,
     })
     const renderJobs = tweet.codes.map(async code => {
-      const renderedBuffer = await renderPokemonGoQrCode(code)
-      const renderedDataUrl = bufferToDataUrl(renderedBuffer, backgroundBuffer)
+      const renderedBuffer = await renderPokemonGoQrCode(code, backgroundBuffer)
+      const renderedDataUrl = bufferToDataUrl("image/png", renderedBuffer)
       return renderedDataUrl
     })
     const qrCodeImages = await Promise.all(renderJobs)
