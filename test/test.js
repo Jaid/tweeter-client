@@ -1,9 +1,12 @@
 import fsp from "@absolunet/fsp"
+import Jimp from "jimp"
+import ms from "ms.macro"
 import path from "path"
 
 import AnimalCrossingFormat from "lib/AnimalCrossingFormat"
 import getQrCodeFromBuffer from "lib/getQrCodeFromBuffer"
 import isLikelyDesign from "lib/isLikelyDesign"
+import renderDeadByDaylightBuild from "lib/renderDeadByDaylightBuild"
 
 it("should parse an Animal Crossing code", async () => {
   const imageFile = path.join(__dirname, "AnimalCrossingDesign.png")
@@ -50,8 +53,7 @@ it("should parse a Pokemon GO friend code", async () => {
 })
 
 it("should parse a Pokemon GO friend code 2", async () => {
-  // Taken from
-  // https://twitter.com/Kaikonyan/status/1244538807422197762
+  // Taken from https://twitter.com/Kaikonyan/status/1244538807422197762
   const imageFile = path.join(__dirname, "PokemonGoFriendCodeScreenshot.jpg")
   const buffer = await fsp.readFile(imageFile)
   const qrCode = await getQrCodeFromBuffer(buffer)
@@ -59,3 +61,20 @@ it("should parse a Pokemon GO friend code 2", async () => {
   expect(qrCode.data.length).toBe(12)
   expect(qrCode.data).toBe("937632191182")
 })
+
+it("should render Dead by Daylight perk build", async () => {
+  const perkIds = [
+    "noMither",
+    "selfCare",
+    "aceInTheHole",
+    "sprintBurst",
+  ]
+  const backgroundFile = path.join(__dirname, "deadByDaylightBackground.png")
+  const backgroundBuffer = await fsp.readFile(backgroundFile)
+  const buffer = await renderDeadByDaylightBuild(perkIds, backgroundBuffer)
+  const file = path.resolve(__dirname, "..", "dist", "test", "deadByDaylightBuild.png")
+  await fsp.outputFile(file, buffer)
+  const jimpImage = await Jimp.read(buffer)
+  expect(jimpImage.getWidth()).toBe(1920)
+  expect(jimpImage.getHeight()).toBe(1080)
+}, ms`2 minutes`)

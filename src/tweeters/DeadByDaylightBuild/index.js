@@ -1,14 +1,14 @@
 import fsp from "@absolunet/fsp"
 import joi from "@hapi/joi"
+import bufferToDataUrl from "buffer-to-data-url"
 import deadByDaylight from "dead-by-daylight"
 import humanizeList from "humanize-list"
-import Jimp from "jimp"
 import schedule from "node-schedule"
 import pickRandom from "pick-random"
-import renderDeadByDaylightBuild from "render-dead-by-daylight-build"
 
 import collator from "lib/collator"
 import handlebars from "lib/handlebars"
+import renderDeadByDaylightBuild from "lib/renderDeadByDaylightBuild"
 import Tweeter from "lib/Tweeter"
 
 /**
@@ -79,14 +79,10 @@ export default class extends Tweeter {
   async run() {
     const picks = this.getPicks()
     const pickIds = picks.map(perk => perk.id)
-    const foregroundBuffer = await renderDeadByDaylightBuild(pickIds)
-    const foregroundJimp = await Jimp.create(foregroundBuffer)
     const backgroundBuffer = await this.getBackgroundBuffer()
-    const backgroundJimp = await Jimp.create(backgroundBuffer)
-    foregroundJimp.contain(backgroundJimp.getWidth(), backgroundJimp.getHeight())
-    backgroundJimp.composite(foregroundJimp, 0, 0)
-    const outputBuffer = await backgroundJimp.getBase64Async(Jimp.MIME_PNG)
-    await this.post(this.getText(picks), outputBuffer)
+    const renderedBuffer = await renderDeadByDaylightBuild(pickIds, backgroundBuffer)
+    const dataUrl = bufferToDataUrl("image/png", renderedBuffer)
+    await this.post(this.getText(picks), dataUrl)
   }
 
 }
