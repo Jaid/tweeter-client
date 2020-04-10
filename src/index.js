@@ -34,9 +34,7 @@ async function job() {
 function main() {
   job().catch(error => {
     logError("Core process crashed")
-    if (error !== undefined) {
-      logError(error)
-    }
+    logError(error)
     process.exit(1)
   })
 }
@@ -44,4 +42,5 @@ function main() {
 yargs
   .scriptName(_PKG_NAME)
   .version(_PKG_VERSION)
-  .command("$0", _PKG_DESCRIPTION, undefined, main).argv
+  .command("$0", _PKG_DESCRIPTION, main)
+  .argv
