@@ -11,7 +11,7 @@
     "camelcase": "^6.0.0",
     "canvas": "^2.6.1",
     "data-urls": "^2.0.0",
-    "dead-by-daylight": "^1.21.1",
+    "dead-by-daylight": "^1.22.0",
     "delay": "^4.3.0",
     "ensure-array": "^1.0.0",
     "ensure-object": "^1.0.1",
@@ -22,8 +22,8 @@
     "handlebars": "^4.7.6",
     "has-content": "^1.1.1",
     "humanize-list": "^1.0.1",
-    "jaid-core": "^8.0.2",
-    "jimp": "^0.10.1",
+    "jaid-core": "^8.0.3",
+    "jimp": "^0.10.2",
     "jsqr": "^1.2.0",
     "just-handlebars-helpers": "^1.0.17",
     "lodash": "^4.17.15",
@@ -46,7 +46,7 @@
   "devDependencies": {
     "acorn": "^7.1.1",
     "babel-jest": "^25.3.0",
-    "babel-preset-jaid": "^7.3.5",
+    "babel-preset-jaid": "^7.3.6",
     "browserslist-config-jaid-node": "^2.2.2",
     "eslint": "^6.8.0",
     "eslint-config-jaid": "^1.49.0",
@@ -54,7 +54,7 @@
     "ms.macro": "^2.0.0",
     "rimraf": "^3.0.2",
     "webpack": "^4.42.1",
-    "webpack-config-jaid": "^11.7.2"
+    "webpack-config-jaid": "^11.8.0"
   },
   "scripts": {
     "clean": "rimraf dist/",
