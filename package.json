@@ -34,7 +34,7 @@
     "regex-parser": "^2.2.10",
     "remove-accents": "^0.4.2",
     "render-dead-by-daylight-build": "^1.1.1",
-    "sequelize": "^5.21.6",
+    "sequelize": "^6.29.0",
     "sort-keys": "^4.0.0",
     "sqlite3": "^4.1.1",
     "steam-game-update-watcher": "^1.1.1",
